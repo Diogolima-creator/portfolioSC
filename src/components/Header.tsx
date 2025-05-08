@@ -79,7 +79,7 @@ export default function Header() {
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Abrir menu"
           >
-            <svg className="w-6 h-6 text-ice-900 dark:text-ice-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-6 h-6 text-white dark:text-ice-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
@@ -87,7 +87,7 @@ export default function Header() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4">
+          <div className="md:hidden py-6 px-6 bg-ice-100/95 dark:bg-ice-900 w-full absolute left-0 top-20 z-40 shadow-xl transition-colors">
             <nav className="flex flex-col space-y-4">
               <div className="flex items-center justify-end space-x-4 mb-4">
                 <LanguageSelector />
