@@ -24,7 +24,7 @@ export const translations = {
     sobreNos: {
       title: 'Sobre Nós',
       subtitle: 'Somos uma empresa de tecnologia focada em entregar soluções de alta qualidade',
-      descricao: 'A SigiloCorp é uma empresa especializada em desenvolvimento de software e consultoria em TI. Nossa missão é ajudar empresas a alcançarem seu potencial máximo através de soluções tecnológicas inovadoras e eficientes.',
+      descricao: 'A BRIG é uma empresa especializada em desenvolvimento de software e consultoria em TI. Nossa missão é ajudar empresas a alcançarem seu potencial máximo através de soluções tecnológicas inovadoras e eficientes.',
       abas: {
         metas: 'Metas',
         objetivos: 'Objetivos',
@@ -74,7 +74,7 @@ export const translations = {
       },
       historia: {
         titulo: 'Nossa História',
-        descricao: 'Desde 2010, a SigiloCorp vem transformando ideias em soluções digitais, crescendo junto com nossos clientes.',
+        descricao: 'Desde 2010, a BRIG vem transformando ideias em soluções digitais, crescendo junto com nossos clientes.',
         botao: 'Ver linha do tempo',
         imagem: '/images/sobre/historia.png'
       }
@@ -170,17 +170,17 @@ export const translations = {
         {
           nome: 'Ana Costa',
           cargo: 'Diretora de Marketing',
-          texto: 'A SigiloCorp transformou nossa presença digital. O novo site e as estratégias de marketing digital aumentaram significativamente nosso alcance.'
+          texto: 'A BRIG transformou nossa presença digital. O novo site e as estratégias de marketing digital aumentaram significativamente nosso alcance.'
         },
         {
           nome: 'Carlos Mendes',
           cargo: 'CEO',
-          texto: 'O sistema ERP desenvolvido pela equipe da SigiloCorp revolucionou nossa gestão interna. A eficiência aumentou e os custos diminuíram.'
+          texto: 'O sistema ERP desenvolvido pela equipe da BRIG revolucionou nossa gestão interna. A eficiência aumentou e os custos diminuíram.'
         },
         {
           nome: 'Juliana Lima',
           cargo: 'Gerente de Projetos',
-          texto: 'Profissionalismo e qualidade são as palavras que definem o trabalho da SigiloCorp. Superaram todas as nossas expectativas.'
+          texto: 'Profissionalismo e qualidade são as palavras que definem o trabalho da BRIG. Superaram todas as nossas expectativas.'
         }
       ]
     },
@@ -196,7 +196,7 @@ export const translations = {
       },
       contato: {
         title: 'Contato',
-        email: 'contato@sigilocorp.com',
+        email: 'contato@brig.com',
         telefone: '+55 (11) 99999-9999',
         endereco: 'Av. Paulista, 1000 - São Paulo, SP'
       },
@@ -228,7 +228,7 @@ export const translations = {
     sobreNos: {
       title: 'About Us',
       subtitle: 'We are a technology company focused on delivering high-quality solutions',
-      descricao: 'SigiloCorp is a company specialized in software development and IT consulting. Our mission is to help companies reach their maximum potential through innovative and efficient technological solutions.',
+      descricao: 'BRIG is a company specialized in software development and IT consulting. Our mission is to help companies reach their maximum potential through innovative and efficient technological solutions.',
       abas: {
         metas: 'Goals',
         objetivos: 'Objectives',
@@ -278,7 +278,7 @@ export const translations = {
       },
       historia: {
         titulo: 'Our History',
-        descricao: 'Since 2010, SigiloCorp has been turning ideas into digital solutions, growing alongside our clients.',
+        descricao: 'Since 2010, BRIG has been turning ideas into digital solutions, growing alongside our clients.',
         botao: 'See timeline',
         imagem: '/images/sobre/historia.png'
       }
@@ -374,17 +374,17 @@ export const translations = {
         {
           nome: 'Anne Smith',
           cargo: 'Marketing Director',
-          texto: 'SigiloCorp transformed our digital presence. The new website and digital marketing strategies significantly increased our reach.'
+          texto: 'BRIG transformed our digital presence. The new website and digital marketing strategies significantly increased our reach.'
         },
         {
           nome: 'Charles Brown',
           cargo: 'CEO',
-          texto: 'The ERP system developed by SigiloCorp team revolutionized our internal management. Efficiency increased and costs decreased.'
+          texto: 'The ERP system developed by BRIG team revolutionized our internal management. Efficiency increased and costs decreased.'
         },
         {
           nome: 'Julia White',
           cargo: 'Project Manager',
-          texto: 'Professionalism and quality are the words that define SigiloCorp work. They exceeded all our expectations.'
+          texto: 'Professionalism and quality are the words that define BRIG work. They exceeded all our expectations.'
         }
       ]
     },
@@ -400,7 +400,7 @@ export const translations = {
       },
       contato: {
         title: 'Contact',
-        email: 'contact@sigilocorp.com',
+        email: 'contact@brig.com',
         telefone: '+1 (555) 123-4567',
         endereco: '123 Tech Street - New York, NY'
       },

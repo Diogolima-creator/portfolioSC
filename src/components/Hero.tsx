@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from '../hooks/useTranslation'
+import { motion } from 'framer-motion'
 
 export default function Hero() {
   const { t } = useTranslation()
@@ -48,21 +49,53 @@ export default function Hero() {
   return (
     <section className="min-h-screen flex items-center justify-center">
       <div className="text-center px-4">
-        <h1 className="text-4xl md:text-7xl font-bold mb-6 pb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary-light to-secondary-light dark:from-primary-dark dark:to-secondary-dark max-w-[70%] mx-auto">
-          {currentText}
-          <span className="animate-blink">|</span>
-        </h1>
-        <p className="text-lg md:text-xl text-ice-600 dark:text-ice-400 mb-8 max-w-2xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
+          <h1 className="text-4xl md:text-7xl font-bold mb-6 pb-4 text-foreground max-w-[70%] mx-auto">
+            {currentText}
+            <motion.span 
+              className="animate-blink"
+              animate={{ opacity: [1, 0] }}
+              transition={{ duration: 0.8, repeat: Infinity, repeatType: "reverse" }}
+            >
+              |
+            </motion.span>
+          </h1>
+        </motion.div>
+
+        <motion.p 
+          className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5, duration: 0.8 }}
+        >
           {t('hero.subtitle')}
-        </p>
-        <div className="flex flex-col md:flex-row gap-4 justify-center">
-          <button className="bg-primary-light dark:bg-primary-dark text-white px-8 py-3 rounded-lg hover:bg-primary-light/90 dark:hover:bg-primary-dark/90 transition-colors">
+        </motion.p>
+
+        <motion.div 
+          className="flex flex-col md:flex-row gap-4 justify-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8, duration: 0.8 }}
+        >
+          <motion.button 
+            className="bg-primary text-primary-foreground px-8 py-3 rounded-lg hover:bg-primary/90 transition-colors"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
             {t('hero.cta.primary')}
-          </button>
-          <button className="bg-transparent border border-ice-300 dark:border-ice-700 text-ice-700 dark:text-ice-300 px-8 py-3 rounded-lg hover:bg-ice-200 dark:hover:bg-ice-800 transition-colors">
+          </motion.button>
+          <motion.button 
+            className="bg-secondary text-secondary-foreground px-8 py-3 rounded-lg hover:bg-secondary/90 transition-colors"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
             {t('hero.cta.secondary')}
-          </button>
-        </div>
+          </motion.button>
+        </motion.div>
       </div>
     </section>
   )

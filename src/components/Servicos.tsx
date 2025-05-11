@@ -1,7 +1,30 @@
+import { motion } from 'framer-motion'
 import { useTranslation } from '../hooks/useTranslation'
 
 export default function Servicos() {
   const { t } = useTranslation()
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2
+      }
+    }
+  }
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut"
+      }
+    }
+  }
 
   const servicos = [
     {
@@ -137,28 +160,60 @@ export default function Servicos() {
   return (
     <section id="servicos" className="py-20">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary-light to-secondary-light dark:from-primary-dark dark:to-secondary-dark">
+        <motion.div 
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
             {t('servicos.title')}
           </h2>
-          <p className="text-ice-600 dark:text-ice-400 text-lg max-w-3xl mx-auto">
+          <p className="text-muted-foreground text-lg max-w-3xl mx-auto">
             {t('servicos.subtitle')}
           </p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        </motion.div>
+
+        <motion.div 
+          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
           {servicos.map((servico, index) => (
-            <div
+            <motion.div
               key={index}
-              className="bg-white/50 dark:bg-ice-900/50 backdrop-blur-lg rounded-xl p-6 border border-ice-200 dark:border-ice-800 hover:border-primary-light/50 dark:hover:border-primary-dark/50 transition-colors group"
+              variants={cardVariants}
+              className="bg-card rounded-xl p-6 border border-border hover:border-primary/50 transition-colors"
+              whileHover={{ 
+                scale: 1.02,
+                transition: { duration: 0.2 }
+              }}
             >
-              <div className="mb-4">{servico.icone}</div>
-              <h3 className="text-xl font-semibold mb-2 text-ice-900 dark:text-ice-50">
+              <motion.div className="mb-4">{servico.icone}</motion.div>
+              <motion.h3 
+                className="text-xl font-semibold mb-4 text-foreground"
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+              >
                 {servico.titulo}
-              </h3>
-              <p className="text-ice-600 dark:text-ice-400">{servico.descricao}</p>
-            </div>
+              </motion.h3>
+              <motion.p 
+                className="text-muted-foreground"
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3 }}
+              >
+                {servico.descricao}
+              </motion.p>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   )

@@ -1,7 +1,30 @@
+import { motion } from 'framer-motion'
 import { useTranslation } from '../hooks/useTranslation'
 
 export default function QuemSomos() {
   const { t, language } = useTranslation()
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2
+      }
+    }
+  }
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut"
+      }
+    }
+  }
 
   const integrantes = [
     {
@@ -45,31 +68,70 @@ export default function QuemSomos() {
   return (
     <section id="quem-somos" className="py-20">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary-light to-secondary-light dark:from-primary-dark dark:to-secondary-dark">
+        <motion.div 
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
             {t('quemSomos.title')}
           </h2>
-          <p className="text-ice-600 dark:text-ice-400 text-lg max-w-3xl mx-auto">
+          <p className="text-muted-foreground text-lg max-w-3xl mx-auto">
             {t('quemSomos.subtitle')}
           </p>
-          <p className="text-ice-600 dark:text-ice-400 text-lg max-w-3xl mx-auto mt-4">
+          <p className="text-muted-foreground text-lg max-w-3xl mx-auto mt-4">
             {t('quemSomos.descricao')}
           </p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        </motion.div>
+
+        <motion.div 
+          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
           {integrantes.map((integrante, index) => (
-            <div key={index} className="bg-white dark:bg-ice-800 rounded-lg shadow-lg overflow-hidden text-center">
-              <div className="flex justify-center p-6">
-                <img src={integrante.imagem} alt={integrante.nome} className="w-32 h-32 rounded-full object-cover" />
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-semibold text-ice-900 dark:text-ice-50">{integrante.nome}</h3>
-                <p className="text-primary-light dark:text-primary-dark font-semibold text-base mb-2">{integrante.cargo[language]}</p>
-                <p className="text-ice-600 dark:text-ice-400">{integrante.resumo[language]}</p>
-              </div>
-            </div>
+            <motion.div 
+              key={index} 
+              variants={cardVariants}
+              className="bg-card rounded-lg shadow-lg overflow-hidden text-center"
+              whileHover={{ 
+                scale: 1.02,
+                transition: { duration: 0.2 }
+              }}
+            >
+              <motion.div 
+                className="flex justify-center p-6"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+              >
+                <motion.img 
+                  src={integrante.imagem} 
+                  alt={integrante.nome} 
+                  className="w-32 h-32 rounded-full object-cover"
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ duration: 0.3 }}
+                />
+              </motion.div>
+              <motion.div 
+                className="p-6"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3 }}
+              >
+                <h3 className="text-xl font-semibold text-foreground">{integrante.nome}</h3>
+                <p className="text-primary font-semibold text-base mb-2">{integrante.cargo[language]}</p>
+                <p className="text-muted-foreground">{integrante.resumo[language]}</p>
+              </motion.div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   )
