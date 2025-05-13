@@ -28,7 +28,12 @@ export default function Header() {
         <div className="flex items-center justify-between h-20">
           {/* Logo + texto */}
           <div className="flex items-center gap-2">
-            <span className="text-2xl font-bold tracking-tight text-foreground">BRIG</span>
+            <img 
+              src={theme === 'dark' ? "/images/iconWhiteNovo.png" : "/images/iconNovo3.png"} 
+              alt="Logo" 
+              className="w-16 h-16" 
+            />
+            <span className="text-2xl font-bold tracking-tight text-foreground">brig.dev</span>
           </div>
 
           {/* Itens do menu centralizados */}
