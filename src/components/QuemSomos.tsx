@@ -37,7 +37,8 @@ export default function QuemSomos() {
         pt: 'Atualmente cursando Engenharia da Computação na UFMS, possui sólida experiência em desenvolvimento centrado no usuário e criação de soluções escaláveis. Atua no desenvolvimento de aplicações fullstack com foco na entrega de produtos eficientes e intuitivos.',
         en: 'Currently pursuing a degree in Computer Engineering at UFMS, with solid experience in user-centered development and scalable solutions. Works on fullstack application development with a focus on delivering efficient and intuitive products.'
       },
-      imagem: '/images/diogo.jpg' // Substitua pelo caminho correto da imagem
+      imagem: '/images/diogo.jpg',
+      linkedin: 'https://www.linkedin.com/in/diogo-lima1408/'
     },
     {
       nome: 'Daniel',
@@ -49,7 +50,8 @@ export default function QuemSomos() {
         pt: 'Graduado em Sistemas e Mídias Digitais pela UFC, possui forte atuação em engenharia de software com foco em inteligência artificial. Tem ampla experiência em documentação técnica, desenvolvimento backend e construção de produtos robustos e orientados a dados.',
         en: 'Graduated in Digital Systems and Media from UFC, with strong expertise in software engineering focused on artificial intelligence. Has extensive experience in technical documentation, backend development, and building robust, data-oriented products.'
       },
-      imagem: '/images/amorim.jpg' // Substitua pelo caminho correto da imagem
+      imagem: '/images/amorim.jpg',
+      linkedin: 'https://www.linkedin.com/in/amorabot/'
     },
     {
       nome: 'Rafael',
@@ -61,7 +63,8 @@ export default function QuemSomos() {
         pt: 'Profissional com sólida experiência em desenvolvimento frontend e backend, atuando em projetos com metodologias ágeis e foco em escalabilidade. Contribui para a entrega de soluções tecnológicas inovadoras e alinhadas às necessidades do negócio.',
         en: 'Professional with solid experience in frontend and backend development, working on projects with agile methodologies and a focus on scalability. Contributes to the delivery of innovative technological solutions aligned with business needs.'
       },
-      imagem: '/images/rafael.jpg' // Substitua pelo caminho correto da imagem
+      imagem: '/images/rafael.jpg',
+      linkedin: 'https://www.linkedin.com/in/rafael-bamberg-868539114/'
     }
   ]
 
@@ -97,11 +100,13 @@ export default function QuemSomos() {
             <motion.div 
               key={index} 
               variants={cardVariants}
-              className="bg-card rounded-lg shadow-lg overflow-hidden text-center"
+              className="bg-card rounded-lg shadow-lg overflow-hidden text-center cursor-pointer"
               whileHover={{ 
                 scale: 1.02,
                 transition: { duration: 0.2 }
               }}
+              onClick={() => window.open(integrante.linkedin, '_blank', 'noopener,noreferrer')}
+              title={`Ver perfil de ${integrante.nome} no LinkedIn`}
             >
               <motion.div 
                 className="flex justify-center p-6"
@@ -128,6 +133,11 @@ export default function QuemSomos() {
                 <h3 className="text-xl font-semibold text-foreground">{integrante.nome}</h3>
                 <p className="text-primary font-semibold text-base mb-2">{integrante.cargo[language]}</p>
                 <p className="text-muted-foreground">{integrante.resumo[language]}</p>
+                <div className="mt-4">
+                  <span className="text-primary text-sm hover:underline">
+                    {t('quemSomos.verLinkedin')}
+                  </span>
+                </div>
               </motion.div>
             </motion.div>
           ))}

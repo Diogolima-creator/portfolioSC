@@ -83,6 +83,7 @@ export const translations = {
       title: 'Quem Somos',
       subtitle: 'Nossa equipe de especialistas',
       descricao: 'Somos uma equipe apaixonada por tecnologia e inovação, comprometida em entregar soluções de alta qualidade que impulsionam o sucesso dos nossos clientes.',
+      verLinkedin: 'Visualizar perfil no LinkedIn',
       items: [
         {
           nome: 'João Silva',
@@ -287,6 +288,7 @@ export const translations = {
       title: 'Who We Are',
       subtitle: 'Our team of experts',
       descricao: 'We are a team passionate about technology and innovation, committed to delivering high-quality solutions that drive our clients success.',
+      verLinkedin: 'View LinkedIn profile',
       items: [
         {
           nome: 'John Smith',
