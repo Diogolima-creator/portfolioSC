@@ -11,8 +11,8 @@ export default function Footer() {
         <div className="absolute inset-0 bg-gradient-radial from-primary/10 via-transparent to-transparent"></div>
       </div>
 
-      <div className="container mx-auto px-4 py-12 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="container mx-auto px-4 py-8 md:py-12 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           <div>
             <h3 className="text-2xl font-bold tracking-tight text-foreground">BRIG</h3>
             <p className="text-muted-foreground mb-4">

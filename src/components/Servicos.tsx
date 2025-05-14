@@ -176,7 +176,7 @@ export default function Servicos() {
         </motion.div>
 
         <motion.div 
-          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -186,7 +186,7 @@ export default function Servicos() {
             <motion.div
               key={index}
               variants={cardVariants}
-              className="bg-card rounded-xl p-6 border border-border hover:border-primary/50 transition-colors"
+              className="bg-card rounded-xl p-4 md:p-6 border border-border hover:border-primary/50 transition-colors"
               whileHover={{ 
                 scale: 1.02,
                 transition: { duration: 0.2 }

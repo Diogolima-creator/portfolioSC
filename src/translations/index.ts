@@ -72,6 +72,13 @@ export const translations = {
         botao: 'Conheça a equipe',
         imagem: '/images/sobre/equipe.png'
       },
+      porquebrig: {
+        title: 'Por que Brig?',
+        description: 'O nome Brig tem origem na palavra bergantim, um tipo de embarcação historicamente utilizada para transportar líderes, cargas valiosas e missões estratégicas. Inspirados por essa simbologia, escolhemos esse nome para representar nossa essência: agilidade, direção e propósito.',
+        paragraph2: 'Assim como os bergantins cortavam mares para levar grandes senhores aos seus destinos, a Brig atua como um veículo confiável para conduzir empresas rumo à transformação digital. Unimos tecnologia, design e estratégia para entregar soluções sólidas, escaláveis e alinhadas às necessidades reais dos nossos clientes.',
+        paragraph3: 'Mais do que desenvolver software, assessoramos, planejamos e navegamos lado a lado com nossos parceiros, garantindo que cada entrega reflita excelência, compromisso e visão de futuro.',
+        paragraph4: 'Na Brig, cada projeto é uma travessia segura rumo a resultados concretos.'
+      },
       historia: {
         titulo: 'Nossa História',
         descricao: 'Desde 2010, a BRIG vem transformando ideias em soluções digitais, crescendo junto com nossos clientes.',
@@ -186,9 +193,9 @@ export const translations = {
       },
       contato: {
         title: 'Contato',
-        email: 'contato@brig.com',
+        email: 'contato@brig.dev.br',
         email2: 'rafael.bamberg@brig.dev.br',
-        email3: 'daniel.amorim@brig.dev.br',
+        email3: 'daniel.amorim@brig.dev.br',  
         endereco: 'Av. Paulista, 1000 - São Paulo, SP'
       },
       copyright: 'Todos os direitos reservados.'
@@ -263,9 +270,16 @@ export const translations = {
       },
       equipe: {
         titulo: 'Our Team',
-        descricao: 'We have experienced professionals passionate about technology, ready to face any challenge.',
+        descricao: 'We have experienced professionals who are passionate about technology, ready to face any challenge.',
         botao: 'Meet the team',
         imagem: '/images/sobre/equipe.png'
+      },
+      porquebrig: {
+        title: 'Why Brig?',
+        description: 'The name Brig originates from the word brigantine, a type of vessel historically used to transport leaders, valuable cargo, and strategic missions. Inspired by this symbolism, we chose this name to represent our essence: agility, direction, and purpose.',
+        paragraph2: 'Just as brigantines cut through seas to carry great lords to their destinations, Brig acts as a reliable vehicle to guide companies towards digital transformation. We combine technology, design, and strategy to deliver solid, scalable solutions aligned with our clients real needs.',
+        paragraph3: 'More than developing software, we advise, plan, and navigate alongside our partners, ensuring that each delivery reflects excellence, commitment, and vision for the future.',
+        paragraph4: 'At Brig, each project is a safe journey towards concrete results.'
       },
       historia: {
         titulo: 'Our History',
@@ -392,7 +406,9 @@ export const translations = {
       },
       contato: {
         title: 'Contact',
-        email: 'contact@brig.com',
+        email: 'contato@brig.dev.br',
+        email2: 'rafael.bamberg@brig.dev.br',
+        email3: 'daniel.amorim@brig.dev.br',
         telefone: '+1 (555) 123-4567',
         endereco: '123 Tech Street - New York, NY'
       },

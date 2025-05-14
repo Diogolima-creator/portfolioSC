@@ -6,6 +6,7 @@ import QuemSomos from './components/QuemSomos'
 import Recomendacoes from './components/Recomendacoes'
 import Servicos from './components/Servicos'
 import SobreNos from './components/SobreNos'
+import WhyBrig from './components/WhyBrig'
 import { LanguageProvider } from './contexts/LanguageContext'
 import { ThemeProvider } from './contexts/ThemeContext'
 
@@ -25,6 +26,7 @@ function App() {
             <div className="relative z-10">
               <Hero />
               <SobreNos />
+              <WhyBrig />
               <QuemSomos />
               <Servicos />
               <Projetos />

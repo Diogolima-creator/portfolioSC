@@ -54,7 +54,7 @@ export default function Projetos() {
         </motion.div>
 
         <motion.div 
-          className="flex flex-wrap justify-center gap-8"
+          className="flex flex-wrap justify-center gap-6 md:gap-8"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -64,7 +64,7 @@ export default function Projetos() {
             <motion.div
               key={index}
               variants={cardVariants}
-              className="bg-card rounded-xl p-6 pb-0 border border-border hover:border-primary/50 transition-colors group flex flex-col h-[800px] w-[400px] overflow-visible"
+              className="bg-card rounded-xl p-4 md:p-6 pb-0 border border-border hover:border-primary/50 transition-colors group flex flex-col w-full md:w-[340px] h-auto md:h-[600px] overflow-visible"
               whileHover={{ 
                 scale: 1.02,
                 transition: { duration: 0.2 }
@@ -120,7 +120,7 @@ export default function Projetos() {
                     src={projeto.imagem}
                     alt={projeto.titulo}
                     style={{ objectPosition: 'top' }}
-                    className="w-full h-full object-cover rounded-b-xl shadow-lg"
+                    className="w-full h-48 md:h-full object-cover rounded-b-xl shadow-lg"
                     transition={{ duration: 0.3 }}
                   />
                 </div>

@@ -27,17 +27,17 @@ export default function Header() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo + texto */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 md:gap-4 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
             <img 
               src={theme === 'dark' ? "/images/iconWhiteNovo.png" : "/images/iconNovo3.png"} 
               alt="Logo" 
-              className="w-16 h-16" 
+              className="w-12 h-12 md:w-16 md:h-16" 
             />
-            <span className="text-2xl font-bold tracking-tight text-foreground">brig.dev</span>
+            <span className="text-xl md:text-2xl font-bold tracking-tight text-foreground">brig.dev</span>
           </div>
 
           {/* Itens do menu centralizados */}
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden lg:flex items-center space-x-6 lg:space-x-8">
             <a href="#sobre" className="text-foreground hover:text-muted-foreground transition-colors">
               {t('sobreNos.title')}
             </a>
@@ -56,7 +56,7 @@ export default function Header() {
           </nav>
 
           {/* Botões à direita (desktop) */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-4">
             <LanguageSelector />
             <button
               onClick={toggleTheme}
@@ -77,7 +77,7 @@ export default function Header() {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2 rounded-lg hover:bg-muted transition-colors"
+            className="lg:hidden p-2 rounded-lg hover:bg-muted transition-colors"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Abrir menu"
           >
@@ -89,7 +89,7 @@ export default function Header() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-6 px-6 bg-background/95 w-full absolute left-0 top-20 z-40 shadow-xl transition-colors">
+          <div className="lg:hidden py-6 px-6 bg-background/95 w-full absolute left-0 top-20 z-40 shadow-xl transition-colors">
             <nav className="flex flex-col space-y-4">
               <div className="flex items-center justify-end space-x-4 mb-4">
                 <LanguageSelector />

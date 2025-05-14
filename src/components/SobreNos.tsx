@@ -74,7 +74,7 @@ export default function SobreNos() {
         </motion.h2>
 
         <motion.div 
-          className="bg-card rounded-3xl p-10 flex flex-col md:flex-row gap-10 border border-border shadow-2xl max-w-6xl mx-auto min-h-[420px]"
+          className="bg-card rounded-3xl p-6 md:p-10 flex flex-col md:flex-row gap-6 md:gap-10 border border-border shadow-2xl max-w-4xl md:max-w-6xl mx-auto min-h-[420px]"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -106,12 +106,12 @@ export default function SobreNos() {
                 )
               })}
             </div>
-            <div className="hidden md:flex mx-4">
-              <div className="w-px bg-border h-full" style={{ minHeight: '200px' }} />
+            <div className="hidden md:flex mx-2 md:mx-4">
+              <div className="w-px bg-border h-full" style={{ minHeight: '120px', maxHeight: '200px' }} />
             </div>
           </div>
 
-          <div className="flex-1 flex flex-col md:flex-row gap-10">
+          <div className="flex-1 flex flex-col md:flex-row gap-6 md:gap-10">
             <motion.div 
               className="flex-1 flex flex-col items-start justify-center"
               initial={{ opacity: 0, x: 20 }}
@@ -127,7 +127,7 @@ export default function SobreNos() {
               </p>
             </motion.div>
             <motion.div 
-              className="w-full md:w-[400px] flex-shrink-0"
+              className="hidden lg:block w-full lg:w-[400px] flex-shrink-0"
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
@@ -138,7 +138,7 @@ export default function SobreNos() {
                   key={abaAtiva}
                   src={abas[abaAtiva].imagem}
                   alt={t(abas[abaAtiva].titulo)}
-                  className="rounded-2xl shadow-2xl object-cover w-full h-[320px] md:h-[400px] bg-muted"
+                  className="rounded-2xl shadow-2xl object-cover w-full h-[220px] md:h-[320px] lg:h-[400px] bg-muted"
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
@@ -150,7 +150,7 @@ export default function SobreNos() {
         </motion.div>
 
         <motion.div 
-          className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto"
+          className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-4xl md:max-w-6xl mx-auto"
           variants={{
             hidden: { opacity: 0 },
             visible: {
