@@ -48,7 +48,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div>
+          <div id="contato">
             <h4 className="text-lg font-semibold text-foreground mb-4">
               {t('footer.contato.title')}
             </h4>

@@ -76,25 +76,34 @@ export default function Hero() {
         </motion.p>
 
         <motion.div 
-          className="flex flex-col md:flex-row gap-3 md:gap-4 justify-center"
+          className="flex flex-col md:flex-row gap-4 justify-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8, duration: 0.8 }}
         >
-          <motion.button 
-            className="bg-primary text-primary-foreground px-6 md:px-8 py-3 rounded-lg hover:bg-primary/90 transition-colors"
+            <motion.button 
+            onClick={() => {
+              const section = document.getElementById('projetos');
+              if (section) section.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="bg-primary text-primary-foreground px-8 py-3 rounded-lg hover:bg-primary/90 transition-colors"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-          >
+            >
             {t('hero.cta.primary')}
-          </motion.button>
-          <motion.button 
-            className="bg-secondary text-secondary-foreground px-6 md:px-8 py-3 rounded-lg hover:bg-secondary/90 transition-colors"
+            </motion.button>
+
+            <motion.button
+            onClick={() => {
+              const section = document.getElementById('contato');
+              if (section) section.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="bg-secondary text-secondary-foreground px-8 py-3 rounded-lg hover:bg-secondary/90 transition-colors"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-          >
+            >
             {t('hero.cta.secondary')}
-          </motion.button>
+            </motion.button>
         </motion.div>
       </div>
     </section>
