@@ -169,20 +169,10 @@ export const translations = {
       subtitle: 'Depoimentos de quem já trabalhou conosco',
       items: [
         {
-          nome: 'Ana Costa',
-          cargo: 'Diretora de Marketing',
-          texto: 'A BRIG transformou nossa presença digital. O novo site e as estratégias de marketing digital aumentaram significativamente nosso alcance.'
+          nome: 'Claudio - Projeto Connect',
+          cargo: '(Pastor e Administrador de Comunidade)',
+          texto: 'A Brig transformou nossa gestão: cadastros, eventos e comunicação num só lugar. Menos planilhas, mais tempo para cuidar de pessoas – Claudio'
         },
-        {
-          nome: 'Carlos Mendes',
-          cargo: 'CEO',
-          texto: 'O sistema ERP desenvolvido pela equipe da BRIG revolucionou nossa gestão interna. A eficiência aumentou e os custos diminuíram.'
-        },
-        {
-          nome: 'Juliana Lima',
-          cargo: 'Gerente de Projetos',
-          texto: 'Profissionalismo e qualidade são as palavras que definem o trabalho da BRIG. Superaram todas as nossas expectativas.'
-        }
       ]
     },
     footer: {
@@ -193,12 +183,12 @@ export const translations = {
         quemSomos: 'Quem Somos',
         servicos: 'Serviços',
         projetos: 'Projetos',
-        contato: 'Contato'
       },
       contato: {
         title: 'Contato',
         email: 'contato@brig.com',
-        telefone: '+55 (11) 99999-9999',
+        email2: 'rafael.bamberg@brig.dev.br',
+        email3: 'daniel.amorim@brig.dev.br',
         endereco: 'Av. Paulista, 1000 - São Paulo, SP'
       },
       copyright: 'Todos os direitos reservados.'

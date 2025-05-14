@@ -45,11 +45,6 @@ export default function Footer() {
                   {t('footer.links.projetos')}
                 </a>
               </li>
-              <li>
-                <a href="#contato" className="text-muted-foreground hover:text-foreground transition-colors">
-                  {t('footer.links.contato')}
-                </a>
-              </li>
             </ul>
           </div>
 
@@ -58,11 +53,10 @@ export default function Footer() {
               {t('footer.contato.title')}
             </h4>
             <ul className="space-y-2">
-              <li className="text-muted-foreground">
-                {t('footer.contato.email')}
-              </li>
-              <li className="text-muted-foreground">
-                {t('footer.contato.telefone')}
+              <li className="flex flex-col text-muted-foreground space-y-1">
+                <span>{t('footer.contato.email')}</span>
+                <span>{t('footer.contato.email2')}</span>
+                <span>{t('footer.contato.email3')}</span>
               </li>
             </ul>
           </div>

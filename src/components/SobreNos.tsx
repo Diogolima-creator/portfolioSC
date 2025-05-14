@@ -11,7 +11,7 @@ const abas = [
     titulo: 'sobreNos.metas.titulo',
     descricao: 'sobreNos.metas.descricao',
     botao: 'sobreNos.metas.botao',
-    imagem: '/images/metasTeste.png'
+    imagem: '/images/metas.png'
   },
   {
     key: 'objetivos',
