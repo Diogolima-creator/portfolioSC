@@ -176,7 +176,7 @@ export const translations = {
       subtitle: 'Depoimentos de quem já trabalhou conosco',
       items: [
         {
-          nome: 'Claudio - Projeto Connect',
+          nome: 'Claudio Barros - Projeto Connect',
           cargo: '(Pastor e Administrador de Comunidade)',
           texto: 'A Brig transformou nossa gestão: cadastros, eventos e comunicação num só lugar. Menos planilhas, mais tempo para cuidar de pessoas – Claudio'
         },

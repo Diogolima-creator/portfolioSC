@@ -1,17 +1,22 @@
 import { motion } from 'framer-motion'
 import { useTranslation } from '../hooks/useTranslation'
+import { useState } from 'react';
+import ProjetoModal, { type Projeto } from './ProjetoModal';
 
 export default function Projetos() {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
+  const [selectedProjeto, setSelectedProjeto] = useState<Projeto | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const projetos = [
+  const projetos: Projeto[] = [
     {
       titulo: t('projetos.items.0.titulo'),
       descricao: t('projetos.items.0.descricao'),
       imagem: '/images/teste2.png',
-      tecnologias: ['React Native', 'TypeScript', 'Firebase', 'Cloudflare']
-    }
-  ]
+      tecnologias: ['React Native', 'TypeScript', 'Firebase', 'Cloudflare'],
+      imagens: ['/images/teste.png', '/images/chest.png'],
+    },
+  ];
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -34,6 +39,15 @@ export default function Projetos() {
       }
     }
   }
+
+  const handleOpenModal = (projeto: Projeto) => {
+    setSelectedProjeto(projeto);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <section id="projetos" className="py-20">
@@ -64,11 +78,12 @@ export default function Projetos() {
             <motion.div
               key={index}
               variants={cardVariants}
-              className="bg-card rounded-xl p-4 md:p-6 pb-0 border border-border hover:border-primary/50 transition-colors group flex flex-col w-full md:w-[340px] h-auto md:h-[600px] overflow-visible"
+              className="bg-card rounded-xl p-4 md:p-6 pb-0 border border-border hover:border-primary/50 transition-colors group flex flex-col w-full md:w-[340px] h-auto md:h-[600px] overflow-visible cursor-pointer"
               whileHover={{ 
                 scale: 1.02,
                 transition: { duration: 0.2 }
               }}
+              onClick={() => handleOpenModal(projeto)}
             >
               <motion.h3 
                 className="text-xl font-semibold mb-2 text-foreground"
@@ -129,6 +144,8 @@ export default function Projetos() {
           ))}
         </motion.div>
       </div>
+
+      <ProjetoModal projeto={selectedProjeto} isOpen={isModalOpen} onClose={handleCloseModal} />
     </section>
   )
-} 
+}
