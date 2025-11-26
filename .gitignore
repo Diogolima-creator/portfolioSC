@@ -16,9 +16,6 @@ dist-ssr
 .env
 .env.local
 
-# TanStack Router
-src/routeTree.gen.ts
-
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
