@@ -351,6 +351,52 @@ function AdminQuestionnaires() {
                           </div>
                         </div>
 
+                        {(question.type === 'text' || question.type === 'textarea') && (
+                          <div className="mt-4 p-4 bg-muted/50 rounded-lg">
+                            <label className="flex items-center gap-2 cursor-pointer mb-3">
+                              <input
+                                type="checkbox"
+                                checked={question.allowMedia || false}
+                                onChange={(e) => updateQuestion(index, 'allowMedia', e.target.checked)}
+                                className="w-4 h-4 text-primary bg-background border-border rounded focus:ring-2 focus:ring-primary"
+                              />
+                              <span className="text-sm font-medium">Permitir anexo de mídia</span>
+                            </label>
+
+                            {question.allowMedia && (
+                              <div className="ml-6">
+                                <label className="block text-xs text-muted-foreground mb-2">
+                                  Tipo de mídia permitido
+                                </label>
+                                <div className="flex gap-4">
+                                  <label className="flex items-center gap-2 cursor-pointer">
+                                    <input
+                                      type="radio"
+                                      name={`media-type-${index}`}
+                                      value="image"
+                                      checked={question.mediaType === 'image' || !question.mediaType}
+                                      onChange={(e) => updateQuestion(index, 'mediaType', e.target.value)}
+                                      className="w-4 h-4 text-primary"
+                                    />
+                                    <span className="text-sm">Imagem</span>
+                                  </label>
+                                  <label className="flex items-center gap-2 cursor-pointer">
+                                    <input
+                                      type="radio"
+                                      name={`media-type-${index}`}
+                                      value="audio"
+                                      checked={question.mediaType === 'audio'}
+                                      onChange={(e) => updateQuestion(index, 'mediaType', e.target.value)}
+                                      className="w-4 h-4 text-primary"
+                                    />
+                                    <span className="text-sm">Áudio</span>
+                                  </label>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+
                         {(question.type === 'single-choice' || question.type === 'multiple-choice') && (
                           <div className="mt-4 p-4 bg-muted/50 rounded-lg">
                             <div className="flex items-center justify-between mb-3">

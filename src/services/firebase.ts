@@ -25,6 +25,8 @@ export interface Question {
   type: 'text' | 'textarea' | 'file' | 'audio' | 'single-choice' | 'multiple-choice';
   required: boolean;
   options?: string[];
+  allowMedia?: boolean;
+  mediaType?: 'image' | 'audio';
 }
 
 export interface QuestionnaireSubmission {
@@ -121,6 +123,12 @@ export async function createQuestionnaire(
         question.options = q.options;
       }
 
+      // Add media settings if enabled
+      if (q.allowMedia) {
+        question.allowMedia = q.allowMedia;
+        question.mediaType = q.mediaType || 'image';
+      }
+
       return question;
     }),
     createdAt: new Date().toISOString()
@@ -157,6 +165,12 @@ export async function updateQuestionnaire(
       // Only add options if they exist and the type requires them
       if ((q.type === 'single-choice' || q.type === 'multiple-choice') && q.options && q.options.length > 0) {
         question.options = q.options;
+      }
+
+      // Add media settings if enabled
+      if (q.allowMedia) {
+        question.allowMedia = q.allowMedia;
+        question.mediaType = q.mediaType || 'image';
       }
 
       return question;

@@ -153,6 +153,22 @@ function InterviewClient() {
             answer,
             createdAt: new Date().toISOString()
           })
+        } else if ((question.type === 'text' || question.type === 'textarea') && answers[question.id]) {
+          // Handle text/textarea with optional media
+          const answer: QuestionnaireAnswer = {
+            id: crypto.randomUUID(),
+            questionId: question.id,
+            answer: answers[question.id],
+            createdAt: new Date().toISOString()
+          }
+
+          // If media is attached, upload it
+          if (question.allowMedia && files[question.id] && files[question.id].length > 0) {
+            const fileUrls = await uploadFiles(files[question.id], id, question.id)
+            answer.fileUrls = fileUrls
+          }
+
+          questionnaireAnswers.push(answer)
         } else if (answers[question.id]) {
           questionnaireAnswers.push({
             id: crypto.randomUUID(),
@@ -267,23 +283,63 @@ function InterviewClient() {
                 </label>
 
                 {question.type === 'text' && (
-                  <input
-                    type="text"
-                    value={answers[question.id] || ''}
-                    onChange={(e) => handleTextChange(question.id, e.target.value)}
-                    className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                    required={question.required}
-                  />
+                  <div className="space-y-3">
+                    <input
+                      type="text"
+                      value={answers[question.id] || ''}
+                      onChange={(e) => handleTextChange(question.id, e.target.value)}
+                      className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                      required={question.required}
+                    />
+                    {question.allowMedia && (
+                      <div>
+                        <label className="block text-sm text-muted-foreground mb-2">
+                          Anexar {question.mediaType === 'audio' ? 'áudio' : 'imagem'} (opcional)
+                        </label>
+                        <input
+                          type="file"
+                          onChange={(e) => handleFileChange(question.id, e.target.files)}
+                          accept={question.mediaType === 'audio' ? 'audio/*' : 'image/*'}
+                          className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
+                        />
+                        {files[question.id] && files[question.id].length > 0 && (
+                          <p className="text-sm text-muted-foreground mt-2">
+                            {files[question.id].length} arquivo(s) selecionado(s)
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 )}
 
                 {question.type === 'textarea' && (
-                  <textarea
-                    value={answers[question.id] || ''}
-                    onChange={(e) => handleTextChange(question.id, e.target.value)}
-                    rows={4}
-                    className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none"
-                    required={question.required}
-                  />
+                  <div className="space-y-3">
+                    <textarea
+                      value={answers[question.id] || ''}
+                      onChange={(e) => handleTextChange(question.id, e.target.value)}
+                      rows={4}
+                      className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+                      required={question.required}
+                    />
+                    {question.allowMedia && (
+                      <div>
+                        <label className="block text-sm text-muted-foreground mb-2">
+                          Anexar {question.mediaType === 'audio' ? 'áudio' : 'imagem'} (opcional)
+                        </label>
+                        <input
+                          type="file"
+                          onChange={(e) => handleFileChange(question.id, e.target.files)}
+                          accept={question.mediaType === 'audio' ? 'audio/*' : 'image/*'}
+                          className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
+                        />
+                        {files[question.id] && files[question.id].length > 0 && (
+                          <p className="text-sm text-muted-foreground mt-2">
+                            {files[question.id].length} arquivo(s) selecionado(s)
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 )}
 
                 {question.type === 'single-choice' && (
