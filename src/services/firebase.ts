@@ -108,10 +108,21 @@ export async function createQuestionnaire(
     id,
     title,
     description,
-    questions: questions.map((q, index) => ({
-      ...q,
-      id: `q${index + 1}`
-    })),
+    questions: questions.map((q, index) => {
+      const question: Question = {
+        id: `q${index + 1}`,
+        text: q.text,
+        type: q.type,
+        required: q.required
+      };
+
+      // Only add options if they exist and the type requires them
+      if ((q.type === 'single-choice' || q.type === 'multiple-choice') && q.options && q.options.length > 0) {
+        question.options = q.options;
+      }
+
+      return question;
+    }),
     createdAt: new Date().toISOString()
   };
 
@@ -135,10 +146,21 @@ export async function updateQuestionnaire(
     id,
     title,
     description,
-    questions: questions.map((q, index) => ({
-      ...q,
-      id: `q${index + 1}`
-    })),
+    questions: questions.map((q, index) => {
+      const question: Question = {
+        id: `q${index + 1}`,
+        text: q.text,
+        type: q.type,
+        required: q.required
+      };
+
+      // Only add options if they exist and the type requires them
+      if ((q.type === 'single-choice' || q.type === 'multiple-choice') && q.options && q.options.length > 0) {
+        question.options = q.options;
+      }
+
+      return question;
+    }),
     createdAt: existing?.createdAt || new Date().toISOString()
   };
 
