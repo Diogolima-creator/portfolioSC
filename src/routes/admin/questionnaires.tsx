@@ -16,6 +16,8 @@ function AdminQuestionnaires() {
   const [selectedQuestionnaire, setSelectedQuestionnaire] = useState<string | null>(null)
   const [submissionCount, setSubmissionCount] = useState<Record<string, number>>({})
   const [editingId, setEditingId] = useState<string | null>(null)
+  const [viewingResponses, setViewingResponses] = useState<string | null>(null)
+  const [responses, setResponses] = useState<any[]>([])
 
   // Form state
   const [title, setTitle] = useState('')
@@ -172,6 +174,22 @@ function AdminQuestionnaires() {
     navigator.clipboard.writeText(url)
     setSelectedQuestionnaire(id)
     setTimeout(() => setSelectedQuestionnaire(null), 2000)
+  }
+
+  async function viewResponses(questionnaireId: string) {
+    try {
+      const submissions = await getSubmissions(questionnaireId)
+      setResponses(submissions)
+      setViewingResponses(questionnaireId)
+    } catch (err) {
+      console.error('Error loading responses:', err)
+      setError('Erro ao carregar respostas')
+    }
+  }
+
+  function closeResponsesModal() {
+    setViewingResponses(null)
+    setResponses([])
   }
 
   if (loading) {
@@ -441,6 +459,13 @@ function AdminQuestionnaires() {
 
                     <div className="flex gap-2">
                       <button
+                        onClick={() => viewResponses(q.id)}
+                        className="px-4 py-2 border border-border rounded-lg text-sm font-medium hover:bg-muted transition-colors"
+                        disabled={submissionCount[q.id] === 0}
+                      >
+                        Ver Respostas ({submissionCount[q.id] || 0})
+                      </button>
+                      <button
                         onClick={() => startEdit(q)}
                         className="px-4 py-2 border border-border rounded-lg text-sm font-medium hover:bg-muted transition-colors"
                       >
@@ -466,6 +491,83 @@ function AdminQuestionnaires() {
             </div>
           )}
         </div>
+
+        {/* Responses Modal */}
+        {viewingResponses && (
+          <div className="fixed inset-0 bg-background/80 z-50 flex items-center justify-center p-4">
+            <div className="bg-card border border-border rounded-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+              <div className="flex items-center justify-between p-6 border-b border-border">
+                <h2 className="text-2xl font-bold">Respostas do Questionário</h2>
+                <button
+                  onClick={closeResponsesModal}
+                  className="p-2 hover:bg-muted rounded-lg transition-colors"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto p-6">
+                {responses.length === 0 ? (
+                  <p className="text-center text-muted-foreground py-12">Nenhuma resposta ainda</p>
+                ) : (
+                  <div className="space-y-6">
+                    {responses.map((submission, index) => (
+                      <div key={submission.id} className="border border-border rounded-lg p-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="text-lg font-semibold">Resposta #{index + 1}</h3>
+                          <span className="text-sm text-muted-foreground">
+                            {new Date(submission.submittedAt).toLocaleString('pt-BR')}
+                          </span>
+                        </div>
+
+                        <div className="space-y-4">
+                          {submission.answers.map((answer: any) => {
+                            const question = questionnaires
+                              .find(q => q.id === viewingResponses)
+                              ?.questions.find(q => q.id === answer.questionId)
+
+                            return (
+                              <div key={answer.id} className="border-l-2 border-primary pl-4">
+                                <p className="font-medium mb-2">{question?.text || 'Pergunta não encontrada'}</p>
+                                <p className="text-muted-foreground">{answer.answer}</p>
+                                {answer.fileUrls && answer.fileUrls.length > 0 && (
+                                  <div className="mt-2 space-y-1">
+                                    {answer.fileUrls.map((url: string, i: number) => (
+                                      <a
+                                        key={i}
+                                        href={url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="block text-primary hover:underline text-sm"
+                                      >
+                                        📎 Ver arquivo {i + 1}
+                                      </a>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className="p-6 border-t border-border">
+                <button
+                  onClick={closeResponsesModal}
+                  className="w-full bg-primary text-primary-foreground py-3 px-6 rounded-lg font-medium hover:bg-primary/90 transition-colors"
+                >
+                  Fechar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

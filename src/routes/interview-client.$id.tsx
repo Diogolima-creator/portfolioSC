@@ -20,7 +20,15 @@ function InterviewClient() {
 
   useEffect(() => {
     loadQuestionnaire()
+    checkIfAlreadySubmitted()
   }, [id])
+
+  function checkIfAlreadySubmitted() {
+    const submitted = localStorage.getItem(`questionnaire_${id}_submitted`)
+    if (submitted === 'true') {
+      setSubmitted(true)
+    }
+  }
 
   async function loadQuestionnaire() {
     try {
@@ -157,6 +165,10 @@ function InterviewClient() {
 
       // Submit answers
       await submitQuestionnaire(id, questionnaireAnswers)
+
+      // Save to localStorage to prevent duplicate submissions
+      localStorage.setItem(`questionnaire_${id}_submitted`, 'true')
+
       setSubmitted(true)
     } catch (err) {
       setError('Erro ao enviar respostas. Tente novamente.')
@@ -219,7 +231,13 @@ function InterviewClient() {
             />
           </svg>
           <h2 className="text-2xl font-bold mb-2">Enviado com sucesso!</h2>
-          <p className="text-muted-foreground">Obrigado por responder ao questionário.</p>
+          <p className="text-muted-foreground mb-6">Obrigado por responder ao questionário.</p>
+          <a
+            href="/"
+            className="inline-block bg-primary text-primary-foreground px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors"
+          >
+            Voltar para o Site
+          </a>
         </div>
       </div>
     )
