@@ -14,7 +14,16 @@ export default function Projetos() {
       descricao: t('projetos.items.0.descricao'),
       imagem: '/images/teste2.png',
       tecnologias: ['React Native', 'TypeScript', 'Firebase', 'Cloudflare'],
-      imagens: ['/images/teste.png', '/images/chest.png'],
+      imagens: ['/images/teste.png'],
+      url: 'https://play.google.com/store/apps/details?id=com.diogolimadev.conect',
+    },
+    {
+      titulo: t('projetos.items.1.titulo'),
+      descricao: t('projetos.items.1.descricao'),
+      imagem: '/images/movimenta.png',
+      tecnologias: ['React', 'Node.js', 'LinkedIn API', 'PostgreSQL'],
+      imagens: [],
+      url: 'https://movimenta-frontend.pages.dev/',
     },
   ];
 

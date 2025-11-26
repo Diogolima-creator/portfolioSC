@@ -4,7 +4,7 @@ type Theme = 'light' | 'dark'
 
 interface ThemeContextType {
   theme: Theme
-  toggleTheme: () => void
+  toggleTheme: (e?: React.MouseEvent<HTMLButtonElement>) => void
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
@@ -25,8 +25,49 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('theme', theme)
   }, [theme])
 
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'light')
+  const toggleTheme = async (e?: React.MouseEvent<HTMLButtonElement>) => {
+    if (!e) {
+      setTheme(prev => prev === 'light' ? 'dark' : 'light')
+      return
+    }
+
+    const rect = e.currentTarget.getBoundingClientRect()
+    const x = rect.left + rect.width / 2
+    const y = rect.top + rect.height / 2
+
+    // Check if View Transition API is supported
+    if (!document.startViewTransition) {
+      setTheme(prev => prev === 'light' ? 'dark' : 'light')
+      return
+    }
+
+    // Use View Transition API with custom animation
+    const transition = document.startViewTransition(() => {
+      setTheme(prev => prev === 'light' ? 'dark' : 'light')
+    })
+
+    // Wait for transition to be ready
+    await transition.ready
+
+    // Animate from click position
+    const endRadius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    )
+
+    document.documentElement.animate(
+      {
+        clipPath: [
+          `circle(0px at ${x}px ${y}px)`,
+          `circle(${endRadius}px at ${x}px ${y}px)`
+        ],
+      },
+      {
+        duration: 700,
+        easing: 'ease-in-out',
+        pseudoElement: '::view-transition-new(root)',
+      }
+    )
   }
 
   return (

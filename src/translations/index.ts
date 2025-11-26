@@ -155,6 +155,11 @@ export const translations = {
           imagem: '/images/teste2.png'
         },
         {
+          titulo: 'Movimenta LinkedIn',
+          descricao: 'Movimenta é uma plataforma de automação para redes sociais. Atualmente disponível para LinkedIn, automatiza postagens e otimiza a presença digital de profissionais e empresas.',
+          imagem: '/images/movimenta.png'
+        },
+        {
           titulo: 'E-commerce Premium',
           descricao: 'Plataforma de e-commerce completa com integração de pagamentos e gestão de estoque.',
           imagem: '/projeto1.jpg'
@@ -355,6 +360,11 @@ export const translations = {
           titulo: 'Connect',
           descricao: 'Connect is an app focused on the comprehensive management of religious communities, aimed primarily at members, leaders, and administrators of churches and communities.',
           imagem: '/images/teste2.png'
+        },
+        {
+          titulo: 'Movimenta LinkedIn',
+          descricao: 'Movimenta is a social media automation platform. Currently available for LinkedIn, it automates posts and optimizes the digital presence of professionals and businesses.',
+          imagem: '/images/movimenta.png'
         },
         {
           titulo: 'Premium E-commerce',

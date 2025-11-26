@@ -59,7 +59,7 @@ export default function Header() {
           <div className="hidden lg:flex items-center gap-4">
             <LanguageSelector />
             <button
-              onClick={toggleTheme}
+              onClick={(e) => toggleTheme(e)}
               className="p-2 rounded-lg hover:bg-muted transition-colors"
               aria-label={theme === 'light' ? 'Mudar para tema escuro' : 'Mudar para tema claro'}
             >
@@ -94,7 +94,7 @@ export default function Header() {
               <div className="flex items-center justify-end space-x-4 mb-4">
                 <LanguageSelector />
                 <button
-                  onClick={toggleTheme}
+                  onClick={(e) => toggleTheme(e)}
                   className="p-2 rounded-lg hover:bg-muted transition-colors"
                   aria-label={theme === 'light' ? 'Mudar para tema escuro' : 'Mudar para tema claro'}
                 >
