@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { getQuestionnaire, submitQuestionnaire, uploadFiles, type Questionnaire, type QuestionnaireAnswer } from '../services/firebase'
 
-export const Route = createFileRoute('/interview-client/$id')({
+export const Route = createFileRoute('/interview-client/$id' as never)({
   component: InterviewClient,
 })
 

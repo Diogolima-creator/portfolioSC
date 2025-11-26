@@ -1,8 +1,8 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { createQuestionnaire, updateQuestionnaire, getAllQuestionnaires, getSubmissions, type Questionnaire, type Question } from '../../services/firebase'
 
-export const Route = createFileRoute('/admin/questionnaires')({
+export const Route = createFileRoute('/admin/questionnaires' as never)({
   component: AdminQuestionnaires,
 })
 
@@ -193,12 +193,12 @@ function AdminQuestionnaires() {
             <h1 className="text-3xl font-bold mb-2">Gerenciar Questionários</h1>
             <p className="text-muted-foreground">Crie e gerencie questionários para seus clientes</p>
           </div>
-          <Link
-            to="/"
+          <a
+            href="/"
             className="px-4 py-2 border border-border rounded-lg hover:bg-muted transition-colors"
           >
             Voltar ao Site
-          </Link>
+          </a>
         </div>
 
         {success && (

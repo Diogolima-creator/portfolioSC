@@ -9,7 +9,7 @@ import Servicos from '../components/Servicos'
 import SobreNos from '../components/SobreNos'
 import WhyBrig from '../components/WhyBrig'
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute('/' as never)({
   component: Index,
 })
 

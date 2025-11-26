@@ -17,7 +17,7 @@ export default function Hero() {
     const deletingSpeed = 50
     const waitingTime = 2000
 
-    let timeout: number
+    let timeout: ReturnType<typeof setTimeout>
 
     if (isWaiting) {
       timeout = setTimeout(() => {
