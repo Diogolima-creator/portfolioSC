@@ -92,10 +92,10 @@ export default function ProjetoModal({ projeto, isOpen, onClose }: ProjetoModalP
               <h3 className="text-xl font-bold text-foreground">{projeto.titulo}</h3>
               <button
                 onClick={onClose}
-                className="ml-auto bg-red-50 hover:bg-red-100 dark:bg-red-950 dark:hover:bg-red-900 border-2 border-red-300 dark:border-red-700 hover:border-red-500 dark:hover:border-red-500 transition-colors w-10 h-10 flex items-center justify-center rounded-full shadow-lg"
+                className="ml-auto text-muted-foreground hover:text-foreground transition-colors p-2"
                 aria-label="Close modal"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-6 h-6 text-red-600 dark:text-red-400">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-6 h-6">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
