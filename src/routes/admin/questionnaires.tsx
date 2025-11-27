@@ -194,7 +194,7 @@ function AdminQuestionnaires() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-muted-foreground">Carregando questionários...</p>
@@ -204,7 +204,7 @@ function AdminQuestionnaires() {
   }
 
   return (
-    <div className="min-h-screen py-12 px-4">
+    <div className="min-h-screen bg-background py-12 px-4">
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -540,7 +540,7 @@ function AdminQuestionnaires() {
 
         {/* Responses Modal */}
         {viewingResponses && (
-          <div className="fixed inset-0 bg-background/80 z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div className="bg-card border border-border rounded-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
               <div className="flex items-center justify-between p-6 border-b border-border">
                 <h2 className="text-2xl font-bold">Respostas do Questionário</h2>

@@ -14,7 +14,6 @@ export default function Projetos() {
       descricao: t('projetos.items.0.descricao'),
       imagem: '/images/teste2.png',
       tecnologias: ['React Native', 'TypeScript', 'Firebase', 'Cloudflare'],
-      imagens: ['/images/teste.png'],
       url: 'https://play.google.com/store/apps/details?id=com.diogolimadev.conect',
     },
     {

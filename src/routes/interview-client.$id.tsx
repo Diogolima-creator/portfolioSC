@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { getQuestionnaire, submitQuestionnaire, uploadFiles, type Questionnaire, type QuestionnaireAnswer } from '../services/firebase'
+import { useTheme } from '../contexts/ThemeContext'
 
 export const Route = createFileRoute('/interview-client/$id' as never)({
   component: InterviewClient,
@@ -8,6 +9,7 @@ export const Route = createFileRoute('/interview-client/$id' as never)({
 
 function InterviewClient() {
   const { id } = Route.useParams()
+  const { theme, toggleTheme } = useTheme()
   const [questionnaire, setQuestionnaire] = useState<Questionnaire | null>(null)
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
@@ -196,10 +198,44 @@ function InterviewClient() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Carregando questionário...</p>
+      <div className="min-h-screen bg-background">
+        {/* Header with theme toggle */}
+        <header className="fixed w-full z-50 bg-background/80 backdrop-blur-lg shadow-lg">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center justify-between h-16">
+              <div className="flex items-center gap-2">
+                <img
+                  src={theme === 'dark' ? "/images/iconWhiteNovo.png" : "/images/iconNovo3.png"}
+                  alt="Logo"
+                  className="w-10 h-10"
+                />
+                <span className="text-lg font-bold tracking-tight text-foreground">brig.dev</span>
+              </div>
+
+              <button
+                onClick={(e) => toggleTheme(e)}
+                className="p-2 rounded-lg hover:bg-muted transition-colors"
+                aria-label={theme === 'light' ? 'Mudar para tema escuro' : 'Mudar para tema claro'}
+              >
+                {theme === 'light' ? (
+                  <svg className="w-6 h-6 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                  </svg>
+                ) : (
+                  <svg className="w-6 h-6 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                )}
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Carregando questionário...</p>
+          </div>
         </div>
       </div>
     )
@@ -207,23 +243,57 @@ function InterviewClient() {
 
   if (error && !questionnaire) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="bg-card border border-border rounded-xl p-8 max-w-md w-full text-center">
-          <svg
-            className="w-16 h-16 text-destructive mx-auto mb-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-            />
-          </svg>
-          <h2 className="text-2xl font-bold mb-2">Erro</h2>
-          <p className="text-muted-foreground">{error}</p>
+      <div className="min-h-screen bg-background">
+        {/* Header with theme toggle */}
+        <header className="fixed w-full z-50 bg-background/80 backdrop-blur-lg shadow-lg">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center justify-between h-16">
+              <div className="flex items-center gap-2">
+                <img
+                  src={theme === 'dark' ? "/images/iconWhiteNovo.png" : "/images/iconNovo3.png"}
+                  alt="Logo"
+                  className="w-10 h-10"
+                />
+                <span className="text-lg font-bold tracking-tight text-foreground">brig.dev</span>
+              </div>
+
+              <button
+                onClick={(e) => toggleTheme(e)}
+                className="p-2 rounded-lg hover:bg-muted transition-colors"
+                aria-label={theme === 'light' ? 'Mudar para tema escuro' : 'Mudar para tema claro'}
+              >
+                {theme === 'light' ? (
+                  <svg className="w-6 h-6 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                  </svg>
+                ) : (
+                  <svg className="w-6 h-6 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                )}
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <div className="flex items-center justify-center min-h-screen p-4">
+          <div className="bg-card border border-border rounded-xl p-8 max-w-md w-full text-center">
+            <svg
+              className="w-16 h-16 text-destructive mx-auto mb-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+              />
+            </svg>
+            <h2 className="text-2xl font-bold mb-2">Erro</h2>
+            <p className="text-muted-foreground">{error}</p>
+          </div>
         </div>
       </div>
     )
@@ -231,38 +301,106 @@ function InterviewClient() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="bg-card border border-border rounded-xl p-8 max-w-md w-full text-center">
-          <svg
-            className="w-16 h-16 text-primary mx-auto mb-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          <h2 className="text-2xl font-bold mb-2">Enviado com sucesso!</h2>
-          <p className="text-muted-foreground mb-6">Obrigado por responder ao questionário.</p>
-          <a
-            href="/"
-            className="inline-block bg-primary text-primary-foreground px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors"
-          >
-            Voltar para o Site
-          </a>
+      <div className="min-h-screen bg-background">
+        {/* Header with theme toggle */}
+        <header className="fixed w-full z-50 bg-background/80 backdrop-blur-lg shadow-lg">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center justify-between h-16">
+              <div className="flex items-center gap-2">
+                <img
+                  src={theme === 'dark' ? "/images/iconWhiteNovo.png" : "/images/iconNovo3.png"}
+                  alt="Logo"
+                  className="w-10 h-10"
+                />
+                <span className="text-lg font-bold tracking-tight text-foreground">brig.dev</span>
+              </div>
+
+              <button
+                onClick={(e) => toggleTheme(e)}
+                className="p-2 rounded-lg hover:bg-muted transition-colors"
+                aria-label={theme === 'light' ? 'Mudar para tema escuro' : 'Mudar para tema claro'}
+              >
+                {theme === 'light' ? (
+                  <svg className="w-6 h-6 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                  </svg>
+                ) : (
+                  <svg className="w-6 h-6 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                )}
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <div className="flex items-center justify-center min-h-screen p-4">
+          <div className="bg-card border border-border rounded-xl p-8 max-w-md w-full text-center">
+            <svg
+              className="w-16 h-16 text-primary mx-auto mb-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <h2 className="text-2xl font-bold mb-2">Enviado com sucesso!</h2>
+            <p className="text-muted-foreground mb-6">Obrigado por responder ao questionário.</p>
+            <a
+              href="/"
+              className="inline-block bg-primary text-primary-foreground px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors"
+            >
+              Voltar para o Site
+            </a>
+          </div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen py-12 px-4">
-      <div className="max-w-3xl mx-auto">
-        <div className="bg-card border border-border rounded-xl p-8">
+    <div className="min-h-screen bg-background">
+      {/* Header with theme toggle */}
+      <header className="fixed w-full z-50 bg-background/80 backdrop-blur-lg shadow-lg">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center gap-2">
+              <img
+                src={theme === 'dark' ? "/images/iconWhiteNovo.png" : "/images/iconNovo3.png"}
+                alt="Logo"
+                className="w-10 h-10"
+              />
+              <span className="text-lg font-bold tracking-tight text-foreground">brig.dev</span>
+            </div>
+
+            <button
+              onClick={(e) => toggleTheme(e)}
+              className="p-2 rounded-lg hover:bg-muted transition-colors"
+              aria-label={theme === 'light' ? 'Mudar para tema escuro' : 'Mudar para tema claro'}
+            >
+              {theme === 'light' ? (
+                <svg className="w-6 h-6 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+              ) : (
+                <svg className="w-6 h-6 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+              )}
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Main content with padding for fixed header */}
+      <div className="pt-28 py-12 px-4">
+        <div className="max-w-3xl mx-auto">
+          <div className="bg-card border border-border rounded-xl p-8">
           <div className="mb-8">
             <h1 className="text-3xl font-bold mb-2">{questionnaire?.title}</h1>
             <p className="text-muted-foreground">{questionnaire?.description}</p>
@@ -468,6 +606,7 @@ function InterviewClient() {
               </button>
             </div>
           </form>
+          </div>
         </div>
       </div>
     </div>
