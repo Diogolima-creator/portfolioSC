@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 export interface QuestionnaireAnswer {
   id: string;
   questionId: string;
+  questionText: string; // Texto da pergunta no momento da resposta
   answer: string;
   fileUrls?: string[];
   createdAt: string;

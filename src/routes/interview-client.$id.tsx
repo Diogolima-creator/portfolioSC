@@ -188,6 +188,7 @@ function InterviewClient() {
           questionnaireAnswers.push({
             id: crypto.randomUUID(),
             questionId: question.id,
+            questionText: question.text,
             answer: `${files[question.id].length} arquivo(s) enviado(s)`,
             fileUrls,
             createdAt: new Date().toISOString()
@@ -203,6 +204,7 @@ function InterviewClient() {
           questionnaireAnswers.push({
             id: crypto.randomUUID(),
             questionId: question.id,
+            questionText: question.text,
             answer: selectedOptions.join(', '),
             createdAt: new Date().toISOString()
           })
@@ -215,6 +217,7 @@ function InterviewClient() {
           questionnaireAnswers.push({
             id: crypto.randomUUID(),
             questionId: question.id,
+            questionText: question.text,
             answer,
             createdAt: new Date().toISOString()
           })
@@ -223,6 +226,7 @@ function InterviewClient() {
           const answer: QuestionnaireAnswer = {
             id: crypto.randomUUID(),
             questionId: question.id,
+            questionText: question.text,
             answer: answers[question.id],
             createdAt: new Date().toISOString()
           }
@@ -238,6 +242,7 @@ function InterviewClient() {
           questionnaireAnswers.push({
             id: crypto.randomUUID(),
             questionId: question.id,
+            questionText: question.text,
             answer: answers[question.id],
             createdAt: new Date().toISOString()
           })

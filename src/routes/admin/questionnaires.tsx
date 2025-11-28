@@ -774,13 +774,16 @@ function AdminQuestionnaires() {
 
                         <div className="space-y-4">
                           {submission.answers.map((answer: any) => {
-                            const question = questionnaires
-                              .find(q => q.id === viewingResponses)
-                              ?.questions.find(q => q.id === answer.questionId)
+                            // Usa o questionText salvo na resposta, ou busca no questionário atual como fallback
+                            const questionText = answer.questionText || 
+                              questionnaires
+                                .find(q => q.id === viewingResponses)
+                                ?.questions.find(q => q.id === answer.questionId)?.text || 
+                              'Pergunta não encontrada'
 
                             return (
                               <div key={answer.id} className="border-l-2 border-primary pl-4">
-                                <p className="font-medium mb-2">{question?.text || 'Pergunta não encontrada'}</p>
+                                <p className="font-medium mb-2">{questionText}</p>
                                 <p className="text-muted-foreground">{answer.answer}</p>
                                 {answer.fileUrls && answer.fileUrls.length > 0 && (
                                   <div className="mt-2 space-y-1">
