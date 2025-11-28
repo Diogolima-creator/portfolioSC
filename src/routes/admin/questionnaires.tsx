@@ -1,6 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
-import { createQuestionnaire, updateQuestionnaire, getAllQuestionnaires, getSubmissions, type Questionnaire, type Question } from '../../services/firebase'
+import { createQuestionnaire, updateQuestionnaire, getAllQuestionnaires, getSubmissions, uploadDescriptionImage, type Questionnaire, type Question, type DescriptionBlock } from '../../services/firebase'
+import AdminHeader from '../../components/AdminHeader'
+import { v4 as uuidv4 } from 'uuid'
 
 export const Route = createFileRoute('/admin/questionnaires' as never)({
   component: AdminQuestionnaires,
@@ -22,6 +24,8 @@ function AdminQuestionnaires() {
   // Form state
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
+  const [descriptionBlocks, setDescriptionBlocks] = useState<DescriptionBlock[]>([])
+  const [uploadingImage, setUploadingImage] = useState(false)
   const [questions, setQuestions] = useState<Omit<Question, 'id'>[]>([
     { text: '', type: 'text', required: true }
   ])
@@ -50,8 +54,61 @@ function AdminQuestionnaires() {
     }
   }
 
+  // Description block functions
+  function addTextBlock() {
+    setDescriptionBlocks([...descriptionBlocks, { id: uuidv4(), type: 'text', content: '' }])
+  }
+
+  async function addImageBlock(file: File) {
+    setUploadingImage(true)
+    try {
+      // Use um ID temporário para o upload
+      const tempId = uuidv4()
+      const url = await uploadDescriptionImage(file, editingId || tempId)
+      setDescriptionBlocks([...descriptionBlocks, { id: uuidv4(), type: 'image', content: url }])
+    } catch (err) {
+      console.error('Error uploading image:', err)
+      setError('Erro ao fazer upload da imagem')
+    } finally {
+      setUploadingImage(false)
+    }
+  }
+
+  function updateDescriptionBlock(id: string, content: string) {
+    setDescriptionBlocks(blocks => 
+      blocks.map(block => block.id === id ? { ...block, content } : block)
+    )
+  }
+
+  function removeDescriptionBlock(id: string) {
+    setDescriptionBlocks(blocks => blocks.filter(block => block.id !== id))
+  }
+
+  function moveDescriptionBlock(id: string, direction: 'up' | 'down') {
+    const index = descriptionBlocks.findIndex(block => block.id === id)
+    if (index === -1) return
+    
+    const newIndex = direction === 'up' ? index - 1 : index + 1
+    if (newIndex < 0 || newIndex >= descriptionBlocks.length) return
+    
+    const newBlocks = [...descriptionBlocks]
+    const [removed] = newBlocks.splice(index, 1)
+    newBlocks.splice(newIndex, 0, removed)
+    setDescriptionBlocks(newBlocks)
+  }
+
   function addQuestion() {
     setQuestions([...questions, { text: '', type: 'text', required: true }])
+  }
+
+  function moveQuestion(index: number, direction: 'up' | 'down') {
+    const newIndex = direction === 'up' ? index - 1 : index + 1
+    if (newIndex < 0 || newIndex >= questions.length) return
+    
+    const newQuestions = [...questions]
+    const [removed] = newQuestions.splice(index, 1)
+    newQuestions.splice(newIndex, 0, removed)
+    setQuestions(newQuestions)
   }
 
   function removeQuestion(index: number) {
@@ -97,11 +154,14 @@ function AdminQuestionnaires() {
     setEditingId(questionnaire.id)
     setTitle(questionnaire.title)
     setDescription(questionnaire.description)
+    setDescriptionBlocks(questionnaire.descriptionBlocks || [])
     setQuestions(questionnaire.questions.map(q => ({
       text: q.text,
       type: q.type,
       required: q.required,
-      options: q.options
+      options: q.options,
+      allowMedia: q.allowMedia,
+      mediaType: q.mediaType
     })))
     setShowForm(true)
     setError(null)
@@ -112,6 +172,7 @@ function AdminQuestionnaires() {
     setEditingId(null)
     setTitle('')
     setDescription('')
+    setDescriptionBlocks([])
     setQuestions([{ text: '', type: 'text', required: true }])
     setShowForm(false)
     setError(null)
@@ -144,11 +205,11 @@ function AdminQuestionnaires() {
 
       if (editingId) {
         // Update existing questionnaire
-        await updateQuestionnaire(editingId, title, description, questions)
+        await updateQuestionnaire(editingId, title, description, questions, descriptionBlocks)
         setSuccess(`Questionário atualizado com sucesso!`)
       } else {
         // Create new questionnaire
-        const id = await createQuestionnaire(title, description, questions)
+        const id = await createQuestionnaire(title, description, questions, descriptionBlocks)
         setSuccess(`Questionário criado com sucesso! ID: ${id}`)
       }
 
@@ -156,6 +217,7 @@ function AdminQuestionnaires() {
       setEditingId(null)
       setTitle('')
       setDescription('')
+      setDescriptionBlocks([])
       setQuestions([{ text: '', type: 'text', required: true }])
       setShowForm(false)
 
@@ -194,30 +256,27 @@ function AdminQuestionnaires() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Carregando questionários...</p>
+      <>
+        <AdminHeader />
+        <div className="min-h-screen bg-background flex items-center justify-center pt-20">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Carregando questionários...</p>
+          </div>
         </div>
-      </div>
+      </>
     )
   }
 
   return (
-    <div className="min-h-screen bg-background py-12 px-4">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <div>
+    <>
+      <AdminHeader />
+      <div className="min-h-screen bg-background pt-28 pb-12 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-8">
             <h1 className="text-3xl font-bold mb-2">Gerenciar Questionários</h1>
             <p className="text-muted-foreground">Crie e gerencie questionários para seus clientes</p>
           </div>
-          <a
-            href="/"
-            className="px-4 py-2 border border-border rounded-lg hover:bg-muted transition-colors"
-          >
-            Voltar ao Site
-          </a>
-        </div>
 
         {success && (
           <div className="mb-6 p-4 bg-primary/10 border border-primary/20 rounded-lg">
@@ -231,7 +290,7 @@ function AdminQuestionnaires() {
           </div>
         )}
 
-        <div className="mb-8">
+        <div className="flex items-center gap-4 mb-8">
           <button
             onClick={() => {
               if (showForm) {
@@ -244,6 +303,16 @@ function AdminQuestionnaires() {
           >
             {showForm ? 'Cancelar' : 'Criar Novo Questionário'}
           </button>
+          
+          <a
+            href="/admin/feedbacks"
+            className="flex items-center gap-2 px-6 py-3 border border-border rounded-lg font-medium hover:bg-muted transition-colors"
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+            Ver Feedbacks
+          </a>
         </div>
 
         {showForm && (
@@ -269,16 +338,122 @@ function AdminQuestionnaires() {
 
               <div>
                 <label className="block text-sm font-medium mb-2">
-                  Descrição *
+                  Descrição Básica *
                 </label>
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  rows={3}
-                  className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none"
-                  placeholder="Descreva o objetivo deste questionário"
+                  rows={4}
+                  className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-y"
+                  placeholder="Descreva o objetivo deste questionário..."
                   required
                 />
+              </div>
+
+              {/* Blocos de Conteúdo da Descrição */}
+              <div className="border border-border rounded-lg p-4">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <label className="block text-sm font-medium">Conteúdo Adicional</label>
+                    <p className="text-xs text-muted-foreground mt-1">Adicione textos e imagens para enriquecer a descrição</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={addTextBlock}
+                      className="flex items-center gap-1 px-3 py-1.5 text-sm bg-muted hover:bg-muted/80 rounded-lg transition-colors"
+                    >
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
+                      </svg>
+                      Texto
+                    </button>
+                    <label className="flex items-center gap-1 px-3 py-1.5 text-sm bg-muted hover:bg-muted/80 rounded-lg transition-colors cursor-pointer">
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      {uploadingImage ? 'Enviando...' : 'Imagem'}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0]
+                          if (file) addImageBlock(file)
+                          e.target.value = ''
+                        }}
+                        disabled={uploadingImage}
+                      />
+                    </label>
+                  </div>
+                </div>
+
+                {descriptionBlocks.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground text-sm">
+                    Nenhum conteúdo adicional. Clique nos botões acima para adicionar.
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {descriptionBlocks.map((block, index) => (
+                      <div key={block.id} className="border border-border rounded-lg p-3 bg-muted/30">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-xs font-medium text-muted-foreground uppercase">
+                            {block.type === 'text' ? '📝 Texto' : '🖼️ Imagem'}
+                          </span>
+                          <div className="flex items-center gap-1">
+                            <button
+                              type="button"
+                              onClick={() => moveDescriptionBlock(block.id, 'up')}
+                              disabled={index === 0}
+                              className="p-1 hover:bg-muted rounded disabled:opacity-30"
+                            >
+                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                              </svg>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => moveDescriptionBlock(block.id, 'down')}
+                              disabled={index === descriptionBlocks.length - 1}
+                              className="p-1 hover:bg-muted rounded disabled:opacity-30"
+                            >
+                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                              </svg>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => removeDescriptionBlock(block.id)}
+                              className="p-1 hover:bg-destructive/20 text-destructive rounded"
+                            >
+                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+
+                        {block.type === 'text' ? (
+                          <textarea
+                            value={block.content}
+                            onChange={(e) => updateDescriptionBlock(block.id, e.target.value)}
+                            rows={3}
+                            className="w-full px-3 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none text-sm"
+                            placeholder="Digite o texto aqui..."
+                          />
+                        ) : (
+                          <div className="relative">
+                            <img 
+                              src={block.content} 
+                              alt="Imagem da descrição" 
+                              className="w-full max-h-48 object-contain rounded-lg border border-border bg-background"
+                            />
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div>
@@ -296,17 +471,44 @@ function AdminQuestionnaires() {
                 <div className="space-y-4">
                   {questions.map((question, index) => (
                     <div key={index} className="border border-border rounded-lg p-4">
-                      <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center justify-between mb-4">
                         <span className="text-sm font-medium">Pergunta {index + 1}</span>
-                        {questions.length > 1 && (
-                          <button
-                            type="button"
-                            onClick={() => removeQuestion(index)}
-                            className="text-destructive hover:text-destructive/90 text-sm"
-                          >
-                            Remover
-                          </button>
-                        )}
+                        <div className="flex items-center gap-2">
+                          {/* Botões de reordenação */}
+                          <div className="flex items-center gap-1 mr-2">
+                            <button
+                              type="button"
+                              onClick={() => moveQuestion(index, 'up')}
+                              disabled={index === 0}
+                              className="p-1.5 hover:bg-muted rounded disabled:opacity-30 disabled:cursor-not-allowed"
+                              title="Mover para cima"
+                            >
+                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                              </svg>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => moveQuestion(index, 'down')}
+                              disabled={index === questions.length - 1}
+                              className="p-1.5 hover:bg-muted rounded disabled:opacity-30 disabled:cursor-not-allowed"
+                              title="Mover para baixo"
+                            >
+                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                              </svg>
+                            </button>
+                          </div>
+                          {questions.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => removeQuestion(index)}
+                              className="text-destructive hover:text-destructive/90 text-sm"
+                            >
+                              Remover
+                            </button>
+                          )}
+                        </div>
                       </div>
 
                       <div className="space-y-3">
@@ -479,12 +681,13 @@ function AdminQuestionnaires() {
           </div>
         )}
 
-        <div className="bg-card border border-border rounded-xl overflow-hidden">
-          <div className="p-6 border-b border-border">
-            <h2 className="text-xl font-bold">Questionários Criados</h2>
-          </div>
+        {!showForm && (
+          <div className="bg-card border border-border rounded-xl overflow-hidden">
+            <div className="p-6 border-b border-border">
+              <h2 className="text-xl font-bold">Questionários Criados</h2>
+            </div>
 
-          {questionnaires.length === 0 ? (
+            {questionnaires.length === 0 ? (
             <div className="p-12 text-center">
               <p className="text-muted-foreground">Nenhum questionário criado ainda</p>
             </div>
@@ -526,17 +729,18 @@ function AdminQuestionnaires() {
                     </div>
                   </div>
 
-                  <div className="mt-4 p-3 bg-muted rounded-lg">
-                    <p className="text-xs text-muted-foreground mb-1">Link do Questionário:</p>
-                    <code className="text-sm break-all">
-                      {window.location.origin}/interview-client/{q.id}
-                    </code>
+                    <div className="mt-4 p-3 bg-muted rounded-lg">
+                      <p className="text-xs text-muted-foreground mb-1">Link do Questionário:</p>
+                      <code className="text-sm break-all">
+                        {window.location.origin}/interview-client/{q.id}
+                      </code>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Responses Modal */}
         {viewingResponses && (
@@ -614,7 +818,8 @@ function AdminQuestionnaires() {
             </div>
           </div>
         )}
+        </div>
       </div>
-    </div>
+    </>
   )
 }

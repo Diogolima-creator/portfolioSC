@@ -11,12 +11,29 @@ export interface QuestionnaireAnswer {
   createdAt: string;
 }
 
+// Bloco de conteúdo para descrição rica
+export interface DescriptionBlock {
+  id: string;
+  type: 'text' | 'image';
+  content: string; // Para texto é o conteúdo, para imagem é a URL
+}
+
 export interface Questionnaire {
   id: string;
   title: string;
   description: string;
+  descriptionBlocks?: DescriptionBlock[]; // Blocos de conteúdo rico
   questions: Question[];
   createdAt: string;
+}
+
+// Feedback da pesquisa
+export interface QuestionnaireFeedback {
+  id: string;
+  questionnaireId: string;
+  rating: number; // 1-5 estrelas
+  comment?: string;
+  submittedAt: string;
 }
 
 export interface Question {
@@ -101,7 +118,8 @@ export async function uploadFiles(
 export async function createQuestionnaire(
   title: string,
   description: string,
-  questions: Omit<Question, 'id'>[]
+  questions: Omit<Question, 'id'>[],
+  descriptionBlocks?: DescriptionBlock[]
 ): Promise<string> {
   const id = uuidv4();
   const questionnaireRef = dbRef(db, `questionnaires/${id}`);
@@ -110,6 +128,7 @@ export async function createQuestionnaire(
     id,
     title,
     description,
+    descriptionBlocks: descriptionBlocks || [],
     questions: questions.map((q, index) => {
       const question: Question = {
         id: `q${index + 1}`,
@@ -143,7 +162,8 @@ export async function updateQuestionnaire(
   id: string,
   title: string,
   description: string,
-  questions: Omit<Question, 'id'>[]
+  questions: Omit<Question, 'id'>[],
+  descriptionBlocks?: DescriptionBlock[]
 ): Promise<void> {
   const questionnaireRef = dbRef(db, `questionnaires/${id}`);
 
@@ -154,6 +174,7 @@ export async function updateQuestionnaire(
     id,
     title,
     description,
+    descriptionBlocks: descriptionBlocks || existing?.descriptionBlocks || [],
     questions: questions.map((q, index) => {
       const question: Question = {
         id: `q${index + 1}`,
@@ -205,4 +226,73 @@ export async function getSubmissions(questionnaireId: string): Promise<Questionn
   }
 
   return [];
+}
+
+// Upload image for questionnaire description
+export async function uploadDescriptionImage(
+  file: File,
+  questionnaireId: string
+): Promise<string> {
+  const fileExtension = file.name.split('.').pop();
+  const fileName = `${uuidv4()}.${fileExtension}`;
+  const filePath = `questionnaires/${questionnaireId}/description/${fileName}`;
+
+  const fileRef = storageRef(storage, filePath);
+  await uploadBytes(fileRef, file);
+
+  const downloadURL = await getDownloadURL(fileRef);
+  return downloadURL;
+}
+
+// Submit feedback for a questionnaire
+export async function submitFeedback(
+  questionnaireId: string,
+  rating: number,
+  comment?: string
+): Promise<string> {
+  const feedbacksRef = dbRef(db, `feedbacks/${questionnaireId}`);
+  const newFeedbackRef = push(feedbacksRef);
+
+  const feedback: QuestionnaireFeedback = {
+    id: newFeedbackRef.key || uuidv4(),
+    questionnaireId,
+    rating,
+    comment,
+    submittedAt: new Date().toISOString()
+  };
+
+  await set(newFeedbackRef, feedback);
+  return feedback.id;
+}
+
+// Get all feedbacks for a questionnaire
+export async function getFeedbacks(questionnaireId: string): Promise<QuestionnaireFeedback[]> {
+  const feedbacksRef = dbRef(db, `feedbacks/${questionnaireId}`);
+  const snapshot = await get(feedbacksRef);
+
+  if (snapshot.exists()) {
+    const data = snapshot.val();
+    return Object.values(data);
+  }
+
+  return [];
+}
+
+// Get all feedbacks grouped by questionnaire
+export async function getAllFeedbacks(): Promise<Record<string, QuestionnaireFeedback[]>> {
+  const feedbacksRef = dbRef(db, 'feedbacks');
+  const snapshot = await get(feedbacksRef);
+
+  if (snapshot.exists()) {
+    const data = snapshot.val();
+    const result: Record<string, QuestionnaireFeedback[]> = {};
+    
+    for (const [questionnaireId, feedbacks] of Object.entries(data)) {
+      result[questionnaireId] = Object.values(feedbacks as Record<string, QuestionnaireFeedback>);
+    }
+    
+    return result;
+  }
+
+  return {};
 }

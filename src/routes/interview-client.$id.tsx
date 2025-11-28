@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
-import { getQuestionnaire, submitQuestionnaire, uploadFiles, type Questionnaire, type QuestionnaireAnswer } from '../services/firebase'
+import { getQuestionnaire, submitQuestionnaire, uploadFiles, submitFeedback, type Questionnaire, type QuestionnaireAnswer } from '../services/firebase'
 import { useTheme } from '../contexts/ThemeContext'
 
 export const Route = createFileRoute('/interview-client/$id' as never)({
@@ -19,6 +19,68 @@ function InterviewClient() {
   const [multipleChoiceAnswers, setMultipleChoiceAnswers] = useState<Record<string, string[]>>({})
   const [otherText, setOtherText] = useState<Record<string, string>>({})
   const [files, setFiles] = useState<Record<string, File[]>>({})
+  
+  // Feedback modal state
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false)
+  const [feedbackRating, setFeedbackRating] = useState(0)
+  const [feedbackComment, setFeedbackComment] = useState('')
+  const [submittingFeedback, setSubmittingFeedback] = useState(false)
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false)
+  
+  // Image carousel state
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(0)
+  const questionsPerPage = 5
+  
+  // Get images from description blocks
+  const imageBlocks = questionnaire?.descriptionBlocks?.filter(block => block.type === 'image') || []
+  const textBlocks = questionnaire?.descriptionBlocks?.filter(block => block.type === 'text') || []
+  
+  // Pagination helpers
+  const totalQuestions = questionnaire?.questions.length || 0
+  const totalPages = Math.ceil(totalQuestions / questionsPerPage)
+  const startIndex = currentPage * questionsPerPage
+  const endIndex = Math.min(startIndex + questionsPerPage, totalQuestions)
+  const currentQuestions = questionnaire?.questions.slice(startIndex, endIndex) || []
+  
+  // Calculate answered questions
+  const answeredQuestions = questionnaire?.questions.filter(q => {
+    if (q.type === 'file' || q.type === 'audio') {
+      return files[q.id] && files[q.id].length > 0
+    }
+    if (q.type === 'multiple-choice') {
+      return multipleChoiceAnswers[q.id] && multipleChoiceAnswers[q.id].length > 0
+    }
+    return answers[q.id] && answers[q.id].trim() !== ''
+  }).length || 0
+  
+  function nextPage() {
+    if (currentPage < totalPages - 1) {
+      setCurrentPage(prev => prev + 1)
+      setTimeout(() => {
+        document.getElementById('questionnaire-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }, 50)
+    }
+  }
+  
+  function prevPage() {
+    if (currentPage > 0) {
+      setCurrentPage(prev => prev - 1)
+      setTimeout(() => {
+        document.getElementById('questionnaire-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }, 50)
+    }
+  }
+  
+  function nextImage() {
+    setCurrentImageIndex((prev) => (prev + 1) % imageBlocks.length)
+  }
+  
+  function prevImage() {
+    setCurrentImageIndex((prev) => (prev - 1 + imageBlocks.length) % imageBlocks.length)
+  }
 
   useEffect(() => {
     loadQuestionnaire()
@@ -187,13 +249,42 @@ function InterviewClient() {
       // Save to localStorage to prevent duplicate submissions
       localStorage.setItem(`questionnaire_${id}_submitted`, 'true')
 
-      setSubmitted(true)
+      // Show feedback modal instead of submitted screen
+      setShowFeedbackModal(true)
     } catch (err) {
       setError('Erro ao enviar respostas. Tente novamente.')
       console.error(err)
     } finally {
       setSubmitting(false)
     }
+  }
+
+  async function handleFeedbackSubmit() {
+    if (feedbackRating === 0) return
+
+    try {
+      setSubmittingFeedback(true)
+      await submitFeedback(id, feedbackRating, feedbackComment || undefined)
+      setFeedbackSubmitted(true)
+      
+      // After a short delay, show the submitted screen
+      setTimeout(() => {
+        setShowFeedbackModal(false)
+        setSubmitted(true)
+      }, 1500)
+    } catch (err) {
+      console.error('Error submitting feedback:', err)
+      // Even if feedback fails, show submitted screen
+      setShowFeedbackModal(false)
+      setSubmitted(true)
+    } finally {
+      setSubmittingFeedback(false)
+    }
+  }
+
+  function skipFeedback() {
+    setShowFeedbackModal(false)
+    setSubmitted(true)
   }
 
   if (loading) {
@@ -400,10 +491,94 @@ function InterviewClient() {
       {/* Main content with padding for fixed header */}
       <div className="pt-28 py-12 px-4">
         <div className="max-w-3xl mx-auto">
-          <div className="bg-card border border-border rounded-xl p-8">
+          <div className="bg-muted/50 border border-border/50 rounded-xl p-8 shadow-2xl ring-1 ring-white/5">
           <div className="mb-8">
             <h1 className="text-3xl font-bold mb-2">{questionnaire?.title}</h1>
-            <p className="text-muted-foreground">{questionnaire?.description}</p>
+            <p className="text-muted-foreground mb-4">{questionnaire?.description}</p>
+            
+            {/* Blocos de conteúdo da descrição */}
+            {questionnaire?.descriptionBlocks && questionnaire.descriptionBlocks.length > 0 && (
+              <div className="mt-6 pt-6 border-t border-border space-y-4">
+                {/* Textos */}
+                {textBlocks.map((block) => (
+                  <p key={block.id} className="text-foreground whitespace-pre-wrap">{block.content}</p>
+                ))}
+                
+                {/* Carrossel de Imagens */}
+                {imageBlocks.length > 0 && (
+                  <div className="relative mt-4">
+                    {/* Container do Carrossel */}
+                    <div className="relative overflow-hidden rounded-xl border border-primary/20 bg-gradient-to-br from-primary/5 via-muted/50 to-primary/10 shadow-lg">
+                      {/* Imagem Principal */}
+                      <div className="relative aspect-video flex items-center justify-center">
+                        <img 
+                          src={imageBlocks[currentImageIndex]?.content} 
+                          alt={`Imagem ${currentImageIndex + 1} de ${imageBlocks.length}`}
+                          className="max-w-full max-h-full object-contain"
+                        />
+                      </div>
+                      
+                      {/* Setas de Navegação */}
+                      {imageBlocks.length > 1 && (
+                        <>
+                          <button
+                            type="button"
+                            onClick={prevImage}
+                            className="absolute left-3 top-1/2 -translate-y-1/2 p-2.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg transition-all hover:scale-110"
+                            aria-label="Imagem anterior"
+                          >
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+                            </svg>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={nextImage}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 p-2.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg transition-all hover:scale-110"
+                            aria-label="Próxima imagem"
+                          >
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                            </svg>
+                          </button>
+                        </>
+                      )}
+                      
+                      {/* Contador */}
+                      {imageBlocks.length > 1 && (
+                        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-4 py-1.5 bg-primary/90 text-primary-foreground rounded-full text-sm font-medium shadow-lg">
+                          {currentImageIndex + 1} / {imageBlocks.length}
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Miniaturas */}
+                    {imageBlocks.length > 1 && (
+                      <div className="flex gap-2 mt-3 overflow-x-auto pb-2">
+                        {imageBlocks.map((block, index) => (
+                          <button
+                            key={block.id}
+                            type="button"
+                            onClick={() => setCurrentImageIndex(index)}
+                            className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
+                              index === currentImageIndex 
+                                ? 'border-primary ring-2 ring-primary/30' 
+                                : 'border-border hover:border-primary/50'
+                            }`}
+                          >
+                            <img 
+                              src={block.content} 
+                              alt={`Miniatura ${index + 1}`}
+                              className="w-full h-full object-cover"
+                            />
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {error && (
@@ -412,8 +587,68 @@ function InterviewClient() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {questionnaire?.questions.map((question, index) => (
+          {/* Progress Header */}
+          {totalQuestions > 0 && (
+            <div className="mb-8 p-4 bg-muted/50 rounded-xl border border-border">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <svg className="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                  </svg>
+                  <span className="font-medium">Progresso</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-sm text-muted-foreground">
+                    Respondidas: <span className="font-bold text-primary">{answeredQuestions}</span> de {totalQuestions}
+                  </span>
+                  <span className="px-3 py-1 bg-primary text-primary-foreground rounded-full text-sm font-bold">
+                    Página {currentPage + 1}/{totalPages}
+                  </span>
+                </div>
+              </div>
+              
+              {/* Progress Bar */}
+              <div className="h-2 bg-muted rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-gradient-to-r from-primary to-primary/70 transition-all duration-500 ease-out"
+                  style={{ width: `${(answeredQuestions / totalQuestions) * 100}%` }}
+                />
+              </div>
+              
+              {/* Page Indicators */}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-center gap-2 mt-3">
+                  {Array.from({ length: totalPages }).map((_, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => {
+                        setCurrentPage(idx)
+                        document.getElementById('questionnaire-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                      }}
+                      className={`w-8 h-8 rounded-full text-sm font-medium transition-colors flex items-center justify-center ${
+                        idx === currentPage
+                          ? 'bg-primary text-primary-foreground ring-2 ring-primary ring-offset-2 ring-offset-background'
+                          : 'bg-muted hover:bg-muted/80 text-muted-foreground'
+                      }`}
+                    >
+                      {idx + 1}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          <form id="questionnaire-form" onSubmit={handleSubmit} className="space-y-6 scroll-mt-24">
+            {/* Questions Range Info */}
+            <div className="text-sm text-muted-foreground mb-4">
+              Questões {startIndex + 1} a {endIndex} de {totalQuestions}
+            </div>
+
+            {currentQuestions.map((question, idx) => {
+              const index = startIndex + idx
+              return (
               <div key={question.id} className="space-y-2">
                 <label className="block text-sm font-medium">
                   {index + 1}. {question.text}
@@ -594,21 +829,169 @@ function InterviewClient() {
                   </div>
                 )}
               </div>
-            ))}
+            )})}
 
-            <div className="pt-6">
-              <button
-                type="submit"
-                disabled={submitting}
-                className="w-full bg-primary text-primary-foreground py-3 px-6 rounded-lg font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {submitting ? 'Enviando...' : 'Enviar Respostas'}
-              </button>
+            {/* Navigation Buttons */}
+            <div className="pt-8 border-t border-border mt-8">
+              <div className="flex items-center justify-between gap-4">
+                {/* Previous Button */}
+                <button
+                  type="button"
+                  onClick={prevPage}
+                  disabled={currentPage === 0}
+                  className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all ${
+                    currentPage === 0
+                      ? 'bg-muted text-muted-foreground cursor-not-allowed opacity-50'
+                      : 'bg-muted hover:bg-muted/80 text-foreground'
+                  }`}
+                >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                  Anterior
+                </button>
+
+                {/* Page Info (Mobile) */}
+                <span className="text-sm text-muted-foreground sm:hidden">
+                  {currentPage + 1} / {totalPages}
+                </span>
+
+                {/* Next or Submit Button */}
+                {currentPage < totalPages - 1 ? (
+                  <button
+                    type="button"
+                    onClick={nextPage}
+                    className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-all"
+                  >
+                    Próximo
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {submitting ? (
+                      <>
+                        <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                        Enviando...
+                      </>
+                    ) : (
+                      <>
+                        Enviar Respostas
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </>
+                    )}
+                  </button>
+                )}
+              </div>
             </div>
           </form>
           </div>
         </div>
       </div>
+
+      {/* Feedback Modal */}
+      {showFeedbackModal && (
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-card border border-border rounded-xl w-full max-w-md p-8 animate-in fade-in zoom-in duration-300">
+            {feedbackSubmitted ? (
+              <div className="text-center">
+                <svg
+                  className="w-16 h-16 text-primary mx-auto mb-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <h3 className="text-xl font-bold">Obrigado pelo feedback!</h3>
+              </div>
+            ) : (
+              <>
+                <h3 className="text-xl font-bold text-center mb-2">Como foi sua experiência?</h3>
+                <p className="text-muted-foreground text-center text-sm mb-6">
+                  Sua opinião nos ajuda a melhorar
+                </p>
+
+                {/* Star Rating */}
+                <div className="flex justify-center gap-2 mb-6">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      onClick={() => setFeedbackRating(star)}
+                      className="p-1 transition-transform hover:scale-110"
+                    >
+                      <svg
+                        className={`w-10 h-10 transition-colors ${
+                          star <= feedbackRating
+                            ? 'text-yellow-400 fill-yellow-400'
+                            : 'text-muted-foreground'
+                        }`}
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={1.5}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"
+                        />
+                      </svg>
+                    </button>
+                  ))}
+                </div>
+
+                {/* Optional Comment */}
+                <div className="mb-6">
+                  <label className="block text-sm font-medium mb-2">
+                    Comentário (opcional)
+                  </label>
+                  <textarea
+                    value={feedbackComment}
+                    onChange={(e) => setFeedbackComment(e.target.value)}
+                    rows={3}
+                    className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+                    placeholder="Conte-nos mais sobre sua experiência..."
+                  />
+                </div>
+
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={skipFeedback}
+                    className="flex-1 py-3 px-6 border border-border rounded-lg font-medium hover:bg-muted transition-colors"
+                  >
+                    Pular
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleFeedbackSubmit}
+                    disabled={feedbackRating === 0 || submittingFeedback}
+                    className="flex-1 bg-primary text-primary-foreground py-3 px-6 rounded-lg font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {submittingFeedback ? 'Enviando...' : 'Enviar'}
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

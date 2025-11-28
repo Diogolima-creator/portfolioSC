@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as InterviewClientIdRouteImport } from './routes/interview-client.$id'
 import { Route as AdminQuestionnairesRouteImport } from './routes/admin/questionnaires'
+import { Route as AdminFeedbacksRouteImport } from './routes/admin/feedbacks'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,33 +29,55 @@ const AdminQuestionnairesRoute = AdminQuestionnairesRouteImport.update({
   path: '/admin/questionnaires',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminFeedbacksRoute = AdminFeedbacksRouteImport.update({
+  id: '/admin/feedbacks',
+  path: '/admin/feedbacks',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin/feedbacks': typeof AdminFeedbacksRoute
   '/admin/questionnaires': typeof AdminQuestionnairesRoute
   '/interview-client/$id': typeof InterviewClientIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin/feedbacks': typeof AdminFeedbacksRoute
   '/admin/questionnaires': typeof AdminQuestionnairesRoute
   '/interview-client/$id': typeof InterviewClientIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin/feedbacks': typeof AdminFeedbacksRoute
   '/admin/questionnaires': typeof AdminQuestionnairesRoute
   '/interview-client/$id': typeof InterviewClientIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin/questionnaires' | '/interview-client/$id'
+  fullPaths:
+    | '/'
+    | '/admin/feedbacks'
+    | '/admin/questionnaires'
+    | '/interview-client/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin/questionnaires' | '/interview-client/$id'
-  id: '__root__' | '/' | '/admin/questionnaires' | '/interview-client/$id'
+  to:
+    | '/'
+    | '/admin/feedbacks'
+    | '/admin/questionnaires'
+    | '/interview-client/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin/feedbacks'
+    | '/admin/questionnaires'
+    | '/interview-client/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminFeedbacksRoute: typeof AdminFeedbacksRoute
   AdminQuestionnairesRoute: typeof AdminQuestionnairesRoute
   InterviewClientIdRoute: typeof InterviewClientIdRoute
 }
@@ -82,11 +105,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminQuestionnairesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/feedbacks': {
+      id: '/admin/feedbacks'
+      path: '/admin/feedbacks'
+      fullPath: '/admin/feedbacks'
+      preLoaderRoute: typeof AdminFeedbacksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminFeedbacksRoute: AdminFeedbacksRoute,
   AdminQuestionnairesRoute: AdminQuestionnairesRoute,
   InterviewClientIdRoute: InterviewClientIdRoute,
 }
