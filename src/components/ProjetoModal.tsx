@@ -135,7 +135,7 @@ export default function ProjetoModal({ projeto, isOpen, onClose }: ProjetoModalP
                       {images.map((img, index) => (
                         <div
                           key={index}
-                          ref={(el) => (imageRefs.current[index] = el)}
+                          ref={(el) => { imageRefs.current[index] = el }}
                           className="snap-center w-full bg-muted rounded-lg overflow-hidden flex items-center justify-center"
                         >
                           <img
