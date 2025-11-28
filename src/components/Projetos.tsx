@@ -132,21 +132,19 @@ export default function Projetos() {
                 ))}
               </motion.div>
               <motion.div 
-                className="relative w-full flex-1 mt-auto overflow-visible"
+                className="relative w-full mt-auto overflow-hidden md:flex-1 md:overflow-visible"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.6 }}
               >
-                <div className="absolute left-0 right-0 h-full">
-                  <motion.img
-                    src={projeto.imagem}
-                    alt={projeto.titulo}
-                    style={{ objectPosition: 'top' }}
-                    className="w-full h-48 md:h-full object-cover rounded-b-xl shadow-lg"
-                    transition={{ duration: 0.3 }}
-                  />
-                </div>
+                <motion.img
+                  src={projeto.imagem}
+                  alt={projeto.titulo}
+                  style={{ objectPosition: 'top' }}
+                  className="w-full h-48 object-cover rounded-b-xl shadow-lg md:absolute md:left-0 md:right-0 md:h-full"
+                  transition={{ duration: 0.3 }}
+                />
               </motion.div>
             </motion.div>
           ))}
