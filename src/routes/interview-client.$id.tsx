@@ -29,6 +29,7 @@ function InterviewClient() {
   
   // Image carousel state
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [imageModalOpen, setImageModalOpen] = useState(false)
   
   // Pagination state
   const [currentPage, setCurrentPage] = useState(0)
@@ -509,35 +510,49 @@ function InterviewClient() {
                   <div className="relative mt-4">
                     {/* Container do Carrossel */}
                     <div className="relative overflow-hidden rounded-xl border border-primary/20 bg-gradient-to-br from-primary/5 via-muted/50 to-primary/10 shadow-lg">
-                      {/* Imagem Principal */}
-                      <div className="relative aspect-video flex items-center justify-center">
+                      {/* Imagem Principal - Clicável para expandir */}
+                      <button
+                        type="button"
+                        onClick={() => setImageModalOpen(true)}
+                        className="relative w-full aspect-[4/3] sm:aspect-video flex items-center justify-center cursor-zoom-in group"
+                      >
                         <img 
                           src={imageBlocks[currentImageIndex]?.content} 
                           alt={`Imagem ${currentImageIndex + 1} de ${imageBlocks.length}`}
                           className="max-w-full max-h-full object-contain"
                         />
-                      </div>
+                        {/* Ícone de expandir */}
+                        <div className="absolute top-3 right-3 p-2 bg-background/80 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                          </svg>
+                        </div>
+                        {/* Hint para mobile */}
+                        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 px-3 py-1 bg-background/80 rounded-full text-xs text-muted-foreground sm:hidden">
+                          Toque para ampliar
+                        </div>
+                      </button>
                       
                       {/* Setas de Navegação */}
                       {imageBlocks.length > 1 && (
                         <>
                           <button
                             type="button"
-                            onClick={prevImage}
-                            className="absolute left-3 top-1/2 -translate-y-1/2 p-2.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg transition-all hover:scale-110"
+                            onClick={(e) => { e.stopPropagation(); prevImage(); }}
+                            className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 p-2 sm:p-2.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg transition-all hover:scale-110"
                             aria-label="Imagem anterior"
                           >
-                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
                             </svg>
                           </button>
                           <button
                             type="button"
-                            onClick={nextImage}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 p-2.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg transition-all hover:scale-110"
+                            onClick={(e) => { e.stopPropagation(); nextImage(); }}
+                            className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 p-2 sm:p-2.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg transition-all hover:scale-110"
                             aria-label="Próxima imagem"
                           >
-                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
                             </svg>
                           </button>
@@ -554,13 +569,13 @@ function InterviewClient() {
                     
                     {/* Miniaturas */}
                     {imageBlocks.length > 1 && (
-                      <div className="flex gap-2 mt-3 overflow-x-auto pb-2">
+                      <div className="flex gap-2 mt-3 overflow-x-auto pb-2 px-1">
                         {imageBlocks.map((block, index) => (
                           <button
                             key={block.id}
                             type="button"
                             onClick={() => setCurrentImageIndex(index)}
-                            className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
+                            className={`flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-lg overflow-hidden border-2 transition-all ${
                               index === currentImageIndex 
                                 ? 'border-primary ring-2 ring-primary/30' 
                                 : 'border-border hover:border-primary/50'
@@ -597,12 +612,12 @@ function InterviewClient() {
                   </svg>
                   <span className="font-medium">Progresso</span>
                 </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-sm text-muted-foreground">
-                    Respondidas: <span className="font-bold text-primary">{answeredQuestions}</span> de {totalQuestions}
-                  </span>
-                  <span className="px-3 py-1 bg-primary text-primary-foreground rounded-full text-sm font-bold">
+                <div className="flex flex-col items-end gap-1">
+                  <span className="px-3 py-1 bg-primary text-primary-foreground rounded-full text-sm font-bold whitespace-nowrap">
                     Página {currentPage + 1}/{totalPages}
+                  </span>
+                  <span className="text-sm text-muted-foreground whitespace-nowrap">
+                    <span className="font-bold text-primary">{answeredQuestions}</span>/{totalQuestions} respondidas
                   </span>
                 </div>
               </div>
@@ -657,11 +672,11 @@ function InterviewClient() {
 
                 {question.type === 'text' && (
                   <div className="space-y-3">
-                    <input
-                      type="text"
+                    <textarea
                       value={answers[question.id] || ''}
                       onChange={(e) => handleTextChange(question.id, e.target.value)}
-                      className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                      rows={2}
+                      className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-y"
                       required={question.required}
                     />
                     {question.allowMedia && (
@@ -833,13 +848,20 @@ function InterviewClient() {
 
             {/* Navigation Buttons */}
             <div className="pt-8 border-t border-border mt-8">
-              <div className="flex items-center justify-between gap-4">
+              {/* Page Info (Mobile) */}
+              <div className="flex justify-center mb-4 sm:hidden">
+                <span className="px-3 py-1 bg-muted rounded-full text-sm font-medium whitespace-nowrap">
+                  {currentPage + 1} de {totalPages}
+                </span>
+              </div>
+              
+              <div className="flex items-center justify-between gap-3">
                 {/* Previous Button */}
                 <button
                   type="button"
                   onClick={prevPage}
                   disabled={currentPage === 0}
-                  className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all ${
+                  className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-6 py-3 rounded-lg font-medium transition-all ${
                     currentPage === 0
                       ? 'bg-muted text-muted-foreground cursor-not-allowed opacity-50'
                       : 'bg-muted hover:bg-muted/80 text-foreground'
@@ -848,22 +870,18 @@ function InterviewClient() {
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                   </svg>
-                  Anterior
+                  <span className="hidden sm:inline">Anterior</span>
                 </button>
-
-                {/* Page Info (Mobile) */}
-                <span className="text-sm text-muted-foreground sm:hidden">
-                  {currentPage + 1} / {totalPages}
-                </span>
 
                 {/* Next or Submit Button */}
                 {currentPage < totalPages - 1 ? (
                   <button
                     type="button"
                     onClick={nextPage}
-                    className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-all"
+                    className="flex items-center gap-1 sm:gap-2 px-3 sm:px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-all"
                   >
-                    Próximo
+                    <span className="hidden sm:inline">Próximo</span>
+                    <span className="sm:hidden">Avançar</span>
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
@@ -872,7 +890,7 @@ function InterviewClient() {
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center gap-1 sm:gap-2 px-3 sm:px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {submitting ? (
                       <>
@@ -880,11 +898,12 @@ function InterviewClient() {
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                         </svg>
-                        Enviando...
+                        <span className="hidden sm:inline">Enviando...</span>
                       </>
                     ) : (
                       <>
-                        Enviar Respostas
+                        <span className="hidden sm:inline">Enviar Respostas</span>
+                        <span className="sm:hidden">Enviar</span>
                         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
@@ -990,6 +1009,88 @@ function InterviewClient() {
               </>
             )}
           </div>
+        </div>
+      )}
+
+      {/* Image Expand Modal */}
+      {imageModalOpen && imageBlocks.length > 0 && (
+        <div 
+          className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+          onClick={() => setImageModalOpen(false)}
+        >
+          {/* Close Button */}
+          <button
+            type="button"
+            onClick={() => setImageModalOpen(false)}
+            className="absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors z-10"
+          >
+            <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          {/* Counter */}
+          {imageBlocks.length > 1 && (
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 px-4 py-2 bg-white/10 rounded-full text-white text-sm font-medium">
+              {currentImageIndex + 1} / {imageBlocks.length}
+            </div>
+          )}
+
+          {/* Navigation Arrows */}
+          {imageBlocks.length > 1 && (
+            <>
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); prevImage(); }}
+                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 rounded-full transition-colors"
+              >
+                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); nextImage(); }}
+                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 rounded-full transition-colors"
+              >
+                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </>
+          )}
+
+          {/* Expanded Image */}
+          <img
+            src={imageBlocks[currentImageIndex]?.content}
+            alt={`Imagem ${currentImageIndex + 1} de ${imageBlocks.length}`}
+            className="max-w-full max-h-full object-contain"
+            onClick={(e) => e.stopPropagation()}
+          />
+
+          {/* Thumbnails */}
+          {imageBlocks.length > 1 && (
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 px-4 py-2 bg-black/50 rounded-xl overflow-x-auto max-w-[90vw]">
+              {imageBlocks.map((block, index) => (
+                <button
+                  key={block.id}
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(index); }}
+                  className={`flex-shrink-0 w-12 h-12 rounded-lg overflow-hidden border-2 transition-all ${
+                    index === currentImageIndex 
+                      ? 'border-white' 
+                      : 'border-transparent opacity-60 hover:opacity-100'
+                  }`}
+                >
+                  <img 
+                    src={block.content} 
+                    alt={`Miniatura ${index + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>
