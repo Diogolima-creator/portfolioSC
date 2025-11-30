@@ -27,7 +27,15 @@ export default function ProjetoModal({ projeto, isOpen, onClose }: ProjetoModalP
     if (isOpen) {
       setCurrentImageIndex(0);
       imageRefs.current = [];
+      // Bloquear scroll do body quando modal estiver aberta
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
     }
+    
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [isOpen, projeto]);
 
   // Track visible images with IntersectionObserver
@@ -75,7 +83,7 @@ export default function ProjetoModal({ projeto, isOpen, onClose }: ProjetoModalP
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
