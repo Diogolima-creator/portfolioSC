@@ -3,7 +3,7 @@ import { useTranslation } from '../hooks/useTranslation'
 
 interface Recomendacao {
   nome: string
-  cargo: string
+  cargo?: string
   texto: string
 }
 
@@ -80,7 +80,7 @@ export default function Recomendacoes() {
                 transition={{ delay: 0.3 }}
               >
                 <h3 className="text-foreground font-semibold">{recomendacao.nome}</h3>
-                <p className="text-primary">{recomendacao.cargo}</p>
+                {recomendacao.cargo && <p className="text-primary">{recomendacao.cargo}</p>}
               </motion.div>
             </motion.div>
           ))}
@@ -88,4 +88,4 @@ export default function Recomendacoes() {
       </div>
     </section>
   )
-} 
+}

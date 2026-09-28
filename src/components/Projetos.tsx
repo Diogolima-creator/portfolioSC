@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { useTranslation } from '../hooks/useTranslation'
 import { useState } from 'react';
 import ProjetoModal, { type Projeto } from './ProjetoModal';
+import PhoneMockup from './PhoneMockup';
 
 export default function Projetos() {
   const { t } = useTranslation();
@@ -11,18 +12,15 @@ export default function Projetos() {
   const projetos: Projeto[] = [
     {
       titulo: t('projetos.items.0.titulo'),
+      resumo: t('projetos.items.0.resumo'),
       descricao: t('projetos.items.0.descricao'),
-      imagem: '/images/teste2.png',
-      tecnologias: ['React Native', 'TypeScript', 'Firebase', 'Cloudflare'],
-      url: 'https://play.google.com/store/apps/details?id=com.diogolimadev.conect',
-    },
-    {
-      titulo: t('projetos.items.1.titulo'),
-      descricao: t('projetos.items.1.descricao'),
-      imagem: '/images/movimenta.png',
-      tecnologias: ['React', 'Node.js', 'LinkedIn API', 'PostgreSQL'],
-      imagens: [],
-      url: 'https://movimenta-frontend.pages.dev/',
+      imagem: '/images/vendperto.jpg',
+      plataformas: ['Android', 'iOS'],
+      tecnologias: ['AWS Rekognition', 'React Native', 'TypeScript', 'OneSignal'],
+      links: [
+        { label: 'Google Play', url: 'https://play.google.com/store/apps/details?id=com.vendperto.app' },
+        { label: 'App Store', url: 'https://apps.apple.com/br/app/vendperto/id6759847437?l=en-GB' },
+      ],
     },
   ];
 
@@ -93,7 +91,7 @@ export default function Projetos() {
               }}
               onClick={() => handleOpenModal(projeto)}
             >
-              <motion.h3 
+              <motion.h3
                 className="text-xl font-semibold mb-2 text-foreground"
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -109,42 +107,36 @@ export default function Projetos() {
                 viewport={{ once: true }}
                 transition={{ delay: 0.3 }}
               >
-                {projeto.descricao}
+                {projeto.resumo}
               </motion.p>
               <motion.div 
-                className="flex flex-wrap gap-2 mb-4"
+                className="flex flex-wrap justify-center gap-1 mb-3"
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.4 }}
               >
-                {projeto.tecnologias.map((tech, techIndex) => (
+                {[...projeto.plataformas, ...projeto.tecnologias].map((tecnologia, index) => (
                   <motion.span
-                    key={techIndex}
-                    className="px-3 py-1 text-sm bg-primary/10 text-primary rounded-full"
+                    key={tecnologia}
+                    className="px-2 py-1 text-xs bg-primary/10 text-primary rounded-full"
                     initial={{ opacity: 0, scale: 0.8 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
-                    transition={{ delay: 0.5 + techIndex * 0.1 }}
+                    transition={{ delay: 0.5 + index * 0.1 }}
                   >
-                    {tech}
+                    {tecnologia}
                   </motion.span>
                 ))}
               </motion.div>
               <motion.div 
-                className="relative w-full mt-auto overflow-hidden md:flex-1 md:overflow-visible"
+                className="relative mt-auto flex min-h-[340px] w-full items-end justify-center pt-2 md:min-h-0 md:flex-1"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.6 }}
               >
-                <motion.img
-                  src={projeto.imagem}
-                  alt={projeto.titulo}
-                  style={{ objectPosition: 'top' }}
-                  className="w-full h-48 object-cover rounded-b-xl shadow-lg md:absolute md:left-0 md:right-0 md:h-full"
-                  transition={{ duration: 0.3 }}
-                />
+                <PhoneMockup src={projeto.imagem} alt={projeto.titulo} />
               </motion.div>
             </motion.div>
           ))}

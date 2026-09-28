@@ -13,5 +13,18 @@ const firebaseConfig = {
 };
 
 export const app = initializeApp(firebaseConfig);
-export const db = getDatabase(app);
-export const storage = getStorage(app);
+// Initialize these services only when a questionnaire route needs them.
+// The public portfolio must also render without local Firebase credentials.
+export function getFirebaseDatabase() {
+  if (!firebaseConfig.databaseURL && !firebaseConfig.projectId) {
+    throw new Error('Configure VITE_FIREBASE_DATABASE_URL or VITE_FIREBASE_PROJECT_ID to use questionnaires.');
+  }
+  return getDatabase(app);
+}
+
+export function getFirebaseStorage() {
+  if (!firebaseConfig.storageBucket) {
+    throw new Error('Configure VITE_FIREBASE_STORAGE_BUCKET to upload questionnaire files.');
+  }
+  return getStorage(app);
+}

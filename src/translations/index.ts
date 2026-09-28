@@ -148,31 +148,24 @@ export const translations = {
     projetos: {
       title: 'Nossos Projetos',
       subtitle: 'Conheça alguns dos nossos trabalhos mais recentes',
+      platforms: 'Disponível para',
       items: [
         {
-          titulo: 'Connect',
-          descricao: 'O Connect é um aplicativo voltado ao gerenciamento integral de comunidades religiosas, dirigido principalmente a membros, líderes e administradores de igrejas e comunidades.',
-          imagem: '/images/teste2.png'
-        },
-        {
-          titulo: 'Movimenta LinkedIn',
-          descricao: 'Movimenta é uma plataforma de automação para redes sociais. Atualmente disponível para LinkedIn, automatiza postagens e otimiza a presença digital de profissionais e empresas.',
-          imagem: '/images/movimenta.png'
-        },
-        {
-          titulo: 'E-commerce Premium',
-          descricao: 'Plataforma de e-commerce completa com integração de pagamentos e gestão de estoque.',
-          imagem: '/projeto1.jpg'
-        },
-        {
-          titulo: 'App de Delivery',
-          descricao: 'Aplicativo mobile para delivery com rastreamento em tempo real e sistema de avaliações.',
-          imagem: '/projeto2.jpg'
-        },
-        {
-          titulo: 'Sistema ERP',
-          descricao: 'Sistema de gestão empresarial personalizado para otimização de processos internos.',
-          imagem: '/projeto3.jpg'
+          titulo: 'VendPerto Minimarket App',
+          resumo: 'A maior e melhor rede própria de minimercados e padarias para condomínios e empresas.',
+          descricao: `O VendPerto é o app do seu minimercado favorito! Faça compras de forma rápida e prática, sem filas e sem complicação.
+
+A maior e melhor rede própria de minimercados e padarias para condomínios e empresas.
+
+Com o VendPerto você pode:
+
+- Consultar produtos e preços escaneando o código de barras
+- Desbloquear a porta do minimercado pelo celular
+- Aproveitar ofertas e descontos exclusivos
+- Adicionar produtos ao carrinho e finalizar sua compra com facilidade
+
+Praticidade e economia na palma da sua mão. Baixe agora e comece a economizar!`,
+          imagem: '/images/vendperto.jpg'
         }
       ]
     },
@@ -181,9 +174,9 @@ export const translations = {
       subtitle: 'Depoimentos de quem já trabalhou conosco',
       items: [
         {
-          nome: 'Claudio Barros - Projeto Connect',
-          cargo: '(Pastor e Administrador de Comunidade)',
-          texto: 'A Brig transformou nossa gestão: cadastros, eventos e comunicação num só lugar. Menos planilhas, mais tempo para cuidar de pessoas – Claudio'
+          nome: 'Lusandro Araujo - Projeto VendPerto App',
+          cargo: '(VendPerto CTO)',
+          texto: 'Estou adorando o app! A experiência é limpa e funcional. Sou fã do trabalho de vocês!'
         },
       ]
     },
@@ -355,31 +348,24 @@ export const translations = {
     projetos: {
       title: 'Our Projects',
       subtitle: 'Check out some of our recent work',
+      platforms: 'Available on',
       items: [
         {
-          titulo: 'Connect',
-          descricao: 'Connect is an app focused on the comprehensive management of religious communities, aimed primarily at members, leaders, and administrators of churches and communities.',
-          imagem: '/images/teste2.png'
-        },
-        {
-          titulo: 'Movimenta LinkedIn',
-          descricao: 'Movimenta is a social media automation platform. Currently available for LinkedIn, it automates posts and optimizes the digital presence of professionals and businesses.',
-          imagem: '/images/movimenta.png'
-        },
-        {
-          titulo: 'Premium E-commerce',
-          descricao: 'Complete e-commerce platform with payment integration and inventory management.',
-          imagem: '/projeto1.jpg'
-        },
-        {
-          titulo: 'Delivery App',
-          descricao: 'Mobile app for delivery with real-time tracking and rating system.',
-          imagem: '/projeto2.jpg'
-        },
-        {
-          titulo: 'ERP System',
-          descricao: 'Custom enterprise management system for internal process optimization.',
-          imagem: '/projeto3.jpg'
+          titulo: 'VendPerto Minimarket App',
+          resumo: 'A leading network of self-owned minimarkets and bakeries for residential buildings and businesses.',
+          descricao: `VendPerto is the app for your favorite minimarket! Shop quickly and easily, without lines or hassle.
+
+A leading network of self-owned minimarkets and bakeries for residential buildings and businesses.
+
+With VendPerto, you can:
+
+- Check products and prices by scanning barcodes
+- Unlock the minimarket door with your phone
+- Enjoy exclusive offers and discounts
+- Add products to your cart and check out with ease
+
+Convenience and savings in the palm of your hand. Download it now and start saving!`,
+          imagem: '/images/vendperto.jpg'
         }
       ]
     },
@@ -388,19 +374,9 @@ export const translations = {
       subtitle: 'Testimonials from those who have worked with us',
       items: [
         {
-          nome: 'Anne Smith',
-          cargo: 'Marketing Director',
-          texto: 'BRIG transformed our digital presence. The new website and digital marketing strategies significantly increased our reach.'
-        },
-        {
-          nome: 'Charles Brown',
-          cargo: 'CEO',
-          texto: 'The ERP system developed by BRIG team revolutionized our internal management. Efficiency increased and costs decreased.'
-        },
-        {
-          nome: 'Julia White',
-          cargo: 'Project Manager',
-          texto: 'Professionalism and quality are the words that define BRIG work. They exceeded all our expectations.'
+          nome: 'Lusandro Araujo - Projeto VendPerto App',
+          cargo: '(VendPerto CTO)',
+          texto: "I'm loving the app! The experience is clean and functional. I'm a fan of your work!"
         }
       ]
     },
@@ -425,4 +401,4 @@ export const translations = {
       copyright: 'All rights reserved.'
     }
   }
-} 
+}

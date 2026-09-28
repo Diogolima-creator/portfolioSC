@@ -1,4 +1,4 @@
-import { db, storage } from '../config/firebase';
+import { getFirebaseDatabase, getFirebaseStorage } from '../config/firebase';
 import { ref as dbRef, get, set, push } from "firebase/database";
 import { ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
@@ -56,7 +56,7 @@ export interface QuestionnaireSubmission {
 
 // Get a specific questionnaire by ID
 export async function getQuestionnaire(id: string): Promise<Questionnaire | null> {
-  const questionnaireRef = dbRef(db, `questionnaires/${id}`);
+  const questionnaireRef = dbRef(getFirebaseDatabase(), `questionnaires/${id}`);
   const snapshot = await get(questionnaireRef);
 
   if (snapshot.exists()) {
@@ -71,7 +71,7 @@ export async function submitQuestionnaire(
   questionnaireId: string,
   answers: QuestionnaireAnswer[]
 ): Promise<string> {
-  const submissionsRef = dbRef(db, `submissions/${questionnaireId}`);
+  const submissionsRef = dbRef(getFirebaseDatabase(), `submissions/${questionnaireId}`);
   const newSubmissionRef = push(submissionsRef);
 
   const submission: QuestionnaireSubmission = {
@@ -95,7 +95,7 @@ export async function uploadFile(
   const fileName = `${uuidv4()}.${fileExtension}`;
   const filePath = `questionnaires/${questionnaireId}/${questionId}/${fileName}`;
 
-  const fileRef = storageRef(storage, filePath);
+  const fileRef = storageRef(getFirebaseStorage(), filePath);
   await uploadBytes(fileRef, file);
 
   const downloadURL = await getDownloadURL(fileRef);
@@ -123,7 +123,7 @@ export async function createQuestionnaire(
   descriptionBlocks?: DescriptionBlock[]
 ): Promise<string> {
   const id = uuidv4();
-  const questionnaireRef = dbRef(db, `questionnaires/${id}`);
+  const questionnaireRef = dbRef(getFirebaseDatabase(), `questionnaires/${id}`);
 
   const questionnaire: Questionnaire = {
     id,
@@ -166,7 +166,7 @@ export async function updateQuestionnaire(
   questions: Omit<Question, 'id'>[],
   descriptionBlocks?: DescriptionBlock[]
 ): Promise<void> {
-  const questionnaireRef = dbRef(db, `questionnaires/${id}`);
+  const questionnaireRef = dbRef(getFirebaseDatabase(), `questionnaires/${id}`);
 
   // Get the existing questionnaire to preserve createdAt
   const existing = await getQuestionnaire(id);
@@ -205,7 +205,7 @@ export async function updateQuestionnaire(
 
 // Get all questionnaires
 export async function getAllQuestionnaires(): Promise<Questionnaire[]> {
-  const questionnairesRef = dbRef(db, 'questionnaires');
+  const questionnairesRef = dbRef(getFirebaseDatabase(), 'questionnaires');
   const snapshot = await get(questionnairesRef);
 
   if (snapshot.exists()) {
@@ -218,7 +218,7 @@ export async function getAllQuestionnaires(): Promise<Questionnaire[]> {
 
 // Get submissions for a questionnaire
 export async function getSubmissions(questionnaireId: string): Promise<QuestionnaireSubmission[]> {
-  const submissionsRef = dbRef(db, `submissions/${questionnaireId}`);
+  const submissionsRef = dbRef(getFirebaseDatabase(), `submissions/${questionnaireId}`);
   const snapshot = await get(submissionsRef);
 
   if (snapshot.exists()) {
@@ -238,7 +238,7 @@ export async function uploadDescriptionImage(
   const fileName = `${uuidv4()}.${fileExtension}`;
   const filePath = `questionnaires/${questionnaireId}/description/${fileName}`;
 
-  const fileRef = storageRef(storage, filePath);
+  const fileRef = storageRef(getFirebaseStorage(), filePath);
   await uploadBytes(fileRef, file);
 
   const downloadURL = await getDownloadURL(fileRef);
@@ -251,7 +251,7 @@ export async function submitFeedback(
   rating: number,
   comment?: string
 ): Promise<string> {
-  const feedbacksRef = dbRef(db, `feedbacks/${questionnaireId}`);
+  const feedbacksRef = dbRef(getFirebaseDatabase(), `feedbacks/${questionnaireId}`);
   const newFeedbackRef = push(feedbacksRef);
 
   const feedback: QuestionnaireFeedback = {
@@ -268,7 +268,7 @@ export async function submitFeedback(
 
 // Get all feedbacks for a questionnaire
 export async function getFeedbacks(questionnaireId: string): Promise<QuestionnaireFeedback[]> {
-  const feedbacksRef = dbRef(db, `feedbacks/${questionnaireId}`);
+  const feedbacksRef = dbRef(getFirebaseDatabase(), `feedbacks/${questionnaireId}`);
   const snapshot = await get(feedbacksRef);
 
   if (snapshot.exists()) {
@@ -281,7 +281,7 @@ export async function getFeedbacks(questionnaireId: string): Promise<Questionnai
 
 // Get all feedbacks grouped by questionnaire
 export async function getAllFeedbacks(): Promise<Record<string, QuestionnaireFeedback[]>> {
-  const feedbacksRef = dbRef(db, 'feedbacks');
+  const feedbacksRef = dbRef(getFirebaseDatabase(), 'feedbacks');
   const snapshot = await get(feedbacksRef);
 
   if (snapshot.exists()) {

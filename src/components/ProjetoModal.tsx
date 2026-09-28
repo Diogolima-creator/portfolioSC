@@ -1,13 +1,17 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from '../hooks/useTranslation';
+import PhoneMockup from './PhoneMockup';
 
 export type Projeto = {
   titulo: string;
+  resumo: string;
   descricao: string;
   imagem: string;
+  plataformas: string[];
   tecnologias: string[];
   imagens?: string[];
-  url?: string;
+  links: { label: string; url: string }[];
 };
 
 type ProjetoModalProps = {
@@ -17,6 +21,7 @@ type ProjetoModalProps = {
 };
 
 export default function ProjetoModal({ projeto, isOpen, onClose }: ProjetoModalProps) {
+  const { t } = useTranslation();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const imageRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -165,44 +170,43 @@ export default function ProjetoModal({ projeto, isOpen, onClose }: ProjetoModalP
                   </div>
                 ) : (
                   /* Single Image */
-                  <div className="relative bg-muted rounded-lg overflow-y-auto scrollbar-thin max-h-[400px]">
-                    <img
-                      src={images[0]}
-                      alt={projeto.titulo}
-                      className="w-full h-auto object-contain"
-                    />
+                  <div className="flex justify-center overflow-hidden rounded-lg bg-gradient-to-b from-muted/30 to-muted p-6">
+                    <PhoneMockup src={images[0]} alt={projeto.titulo} size="modal" />
                   </div>
                 )}
 
-                <p className="mt-6 text-muted-foreground">{projeto.descricao}</p>
+                <p className="mt-6 whitespace-pre-line text-muted-foreground">{projeto.descricao}</p>
 
                 <div className="mt-6">
-                  <h4 className="font-semibold text-foreground mb-3">Tecnologias:</h4>
+                  <h4 className="font-semibold text-foreground mb-3">{t('projetos.platforms')}:</h4>
                   <div className="flex flex-wrap gap-2">
-                    {projeto.tecnologias.map((tech, index) => (
+                    {projeto.plataformas.map((plataforma) => (
                       <span
-                        key={index}
+                        key={plataforma}
                         className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm"
                       >
-                        {tech}
+                        {plataforma}
                       </span>
                     ))}
                   </div>
                 </div>
 
-                {projeto.url && (
-                  <div className="mt-6">
-                    <a
-                      href={projeto.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors"
-                    >
-                      Ver Projeto
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-                      </svg>
-                    </a>
+                {projeto.links.length > 0 && (
+                  <div className="mt-6 flex flex-wrap gap-3">
+                    {projeto.links.map((link) => (
+                      <a
+                        key={link.url}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors"
+                      >
+                        {link.label}
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                        </svg>
+                      </a>
+                    ))}
                   </div>
                 )}
               </div>
