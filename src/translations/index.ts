@@ -149,6 +149,8 @@ export const translations = {
       title: 'Nossos Projetos',
       subtitle: 'Conheça alguns dos nossos trabalhos mais recentes',
       platforms: 'Disponível para',
+      technologies: 'Tecnologias',
+      visitSite: 'Visitar site',
       items: [
         {
           titulo: 'VendPerto Minimarket App',
@@ -169,8 +171,8 @@ Praticidade e economia na palma da sua mão. Baixe agora e comece a economizar!`
         },
         {
           titulo: 'FechaLead',
-          resumo: 'Encontre potenciais clientes e conduza conversas de vendas com o apoio da inteligência artificial.',
-          descricao: 'O FechaLead ajuda empresas a descobrir potenciais clientes e iniciar conversas mais relevantes com agentes de IA adaptados ao contexto do negócio.',
+          resumo: 'Prospecção B2B para encontrar empresas alinhadas ao seu serviço e preparar cada conversa com contexto.',
+          descricao: 'O FechaLead é uma plataforma de prospecção B2B para prestadores de serviços. A partir do perfil do negócio, ajuda a encontrar empresas com potencial de compra e reúne informações para abordar cada oportunidade com mais contexto. Busca de leads, organização de contatos e preparação das próximas conversas em um só lugar.',
           imagem: '/images/fechalead.webp'
         }
       ]
@@ -355,6 +357,8 @@ Praticidade e economia na palma da sua mão. Baixe agora e comece a economizar!`
       title: 'Our Projects',
       subtitle: 'Check out some of our recent work',
       platforms: 'Available on',
+      technologies: 'Technologies',
+      visitSite: 'Visit website',
       items: [
         {
           titulo: 'VendPerto Minimarket App',
@@ -375,8 +379,8 @@ Convenience and savings in the palm of your hand. Download it now and start savi
         },
         {
           titulo: 'FechaLead',
-          resumo: 'Find potential customers and start sales conversations with the help of artificial intelligence.',
-          descricao: 'FechaLead helps companies discover potential customers and start more relevant conversations with AI agents tailored to their business context.',
+          resumo: 'B2B prospecting to find businesses that fit your services and prepare every conversation with context.',
+          descricao: 'FechaLead is a B2B prospecting platform for service providers. Based on a business profile, it helps find companies with buying potential and gathers context for approaching each opportunity. Lead discovery, contact organization, and preparation for the next conversation come together in one place.',
           imagem: '/images/fechalead.webp'
         }
       ]

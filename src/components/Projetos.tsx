@@ -28,10 +28,13 @@ export default function Projetos() {
       resumo: t('projetos.items.1.resumo'),
       descricao: t('projetos.items.1.descricao'),
       imagem: '/images/fechalead.webp',
+      imagemCard: '/images/fechalead-preview.webp',
       visualizacao: 'website',
       plataformas: [],
-      tecnologias: [],
-      links: [],
+      tecnologias: ['Next.js', 'TypeScript', 'NestJS', 'PostgreSQL', 'Redis', 'Tailwind CSS'],
+      links: [
+        { label: t('projetos.visitSite'), url: 'https://fechalead.com.br/' },
+      ],
     },
   ];
 
@@ -152,12 +155,25 @@ export default function Projetos() {
                 {projeto.visualizacao === 'phone' ? (
                   <PhoneMockup src={projeto.imagem} alt={projeto.titulo} />
                 ) : (
-                  <img
-                    src={projeto.imagem}
-                    alt={projeto.titulo}
-                    className="absolute inset-0 h-full w-full object-cover object-top"
-                    loading="lazy"
-                  />
+                  <>
+                    <img
+                      src={projeto.imagemCard ?? projeto.imagem}
+                      alt={projeto.titulo}
+                      className="absolute inset-0 h-full w-full object-cover object-top"
+                      loading="lazy"
+                    />
+                    {projeto.links[0] && (
+                      <a
+                        href={projeto.links[0].url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(event) => event.stopPropagation()}
+                        className="absolute bottom-4 right-4 z-10 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-lg hover:bg-primary/90"
+                      >
+                        {projeto.links[0].label} ↗
+                      </a>
+                    )}
+                  </>
                 )}
               </motion.div>
             </motion.div>

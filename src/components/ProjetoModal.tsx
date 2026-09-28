@@ -8,6 +8,7 @@ export type Projeto = {
   resumo: string;
   descricao: string;
   imagem: string;
+  imagemCard?: string;
   visualizacao: 'phone' | 'website';
   plataformas: string[];
   tecnologias: string[];
@@ -194,6 +195,22 @@ export default function ProjetoModal({ projeto, isOpen, onClose }: ProjetoModalP
                           className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm"
                         >
                           {plataforma}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {projeto.tecnologias.length > 0 && (
+                  <div className="mt-6">
+                    <h4 className="font-semibold text-foreground mb-3">{t('projetos.technologies')}:</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {projeto.tecnologias.map((tecnologia) => (
+                        <span
+                          key={tecnologia}
+                          className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm"
+                        >
+                          {tecnologia}
                         </span>
                       ))}
                     </div>
