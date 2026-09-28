@@ -8,6 +8,7 @@ export type Projeto = {
   resumo: string;
   descricao: string;
   imagem: string;
+  visualizacao: 'phone' | 'website';
   plataformas: string[];
   tecnologias: string[];
   imagens?: string[];
@@ -170,26 +171,34 @@ export default function ProjetoModal({ projeto, isOpen, onClose }: ProjetoModalP
                   </div>
                 ) : (
                   /* Single Image */
-                  <div className="flex justify-center overflow-hidden rounded-lg bg-gradient-to-b from-muted/30 to-muted p-6">
-                    <PhoneMockup src={images[0]} alt={projeto.titulo} size="modal" />
-                  </div>
+                  projeto.visualizacao === 'phone' ? (
+                    <div className="flex justify-center overflow-hidden rounded-lg bg-gradient-to-b from-muted/30 to-muted p-6">
+                      <PhoneMockup src={images[0]} alt={projeto.titulo} size="modal" />
+                    </div>
+                  ) : (
+                    <div className="mx-auto max-h-[50vh] max-w-3xl overflow-y-auto rounded-lg border border-border scrollbar-thin">
+                      <img src={images[0]} alt={projeto.titulo} className="block w-full h-auto" />
+                    </div>
+                  )
                 )}
 
                 <p className="mt-6 whitespace-pre-line text-muted-foreground">{projeto.descricao}</p>
 
-                <div className="mt-6">
-                  <h4 className="font-semibold text-foreground mb-3">{t('projetos.platforms')}:</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {projeto.plataformas.map((plataforma) => (
-                      <span
-                        key={plataforma}
-                        className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm"
-                      >
-                        {plataforma}
-                      </span>
-                    ))}
+                {projeto.plataformas.length > 0 && (
+                  <div className="mt-6">
+                    <h4 className="font-semibold text-foreground mb-3">{t('projetos.platforms')}:</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {projeto.plataformas.map((plataforma) => (
+                        <span
+                          key={plataforma}
+                          className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm"
+                        >
+                          {plataforma}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {projeto.links.length > 0 && (
                   <div className="mt-6 flex flex-wrap gap-3">

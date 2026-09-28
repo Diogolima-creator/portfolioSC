@@ -15,12 +15,23 @@ export default function Projetos() {
       resumo: t('projetos.items.0.resumo'),
       descricao: t('projetos.items.0.descricao'),
       imagem: '/images/vendperto.jpg',
+      visualizacao: 'phone',
       plataformas: ['Android', 'iOS'],
       tecnologias: ['AWS Rekognition', 'React Native', 'TypeScript', 'OneSignal'],
       links: [
         { label: 'Google Play', url: 'https://play.google.com/store/apps/details?id=com.vendperto.app' },
         { label: 'App Store', url: 'https://apps.apple.com/br/app/vendperto/id6759847437?l=en-GB' },
       ],
+    },
+    {
+      titulo: t('projetos.items.1.titulo'),
+      resumo: t('projetos.items.1.resumo'),
+      descricao: t('projetos.items.1.descricao'),
+      imagem: '/images/fechalead.webp',
+      visualizacao: 'website',
+      plataformas: [],
+      tecnologias: [],
+      links: [],
     },
   ];
 
@@ -130,13 +141,24 @@ export default function Projetos() {
                 ))}
               </motion.div>
               <motion.div 
-                className="relative mt-auto flex min-h-[340px] w-full items-end justify-center pt-2 md:min-h-0 md:flex-1"
+                className={`relative mt-auto flex min-h-[340px] w-full items-end justify-center md:min-h-0 md:flex-1 ${
+                  projeto.visualizacao === 'website' ? 'overflow-hidden rounded-b-xl bg-muted' : 'pt-2'
+                }`}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.6 }}
               >
-                <PhoneMockup src={projeto.imagem} alt={projeto.titulo} />
+                {projeto.visualizacao === 'phone' ? (
+                  <PhoneMockup src={projeto.imagem} alt={projeto.titulo} />
+                ) : (
+                  <img
+                    src={projeto.imagem}
+                    alt={projeto.titulo}
+                    className="absolute inset-0 h-full w-full object-cover object-top"
+                    loading="lazy"
+                  />
+                )}
               </motion.div>
             </motion.div>
           ))}

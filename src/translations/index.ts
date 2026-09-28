@@ -166,6 +166,12 @@ Com o VendPerto você pode:
 
 Praticidade e economia na palma da sua mão. Baixe agora e comece a economizar!`,
           imagem: '/images/vendperto.jpg'
+        },
+        {
+          titulo: 'FechaLead',
+          resumo: 'Encontre potenciais clientes e conduza conversas de vendas com o apoio da inteligência artificial.',
+          descricao: 'O FechaLead ajuda empresas a descobrir potenciais clientes e iniciar conversas mais relevantes com agentes de IA adaptados ao contexto do negócio.',
+          imagem: '/images/fechalead.webp'
         }
       ]
     },
@@ -366,6 +372,12 @@ With VendPerto, you can:
 
 Convenience and savings in the palm of your hand. Download it now and start saving!`,
           imagem: '/images/vendperto.jpg'
+        },
+        {
+          titulo: 'FechaLead',
+          resumo: 'Find potential customers and start sales conversations with the help of artificial intelligence.',
+          descricao: 'FechaLead helps companies discover potential customers and start more relevant conversations with AI agents tailored to their business context.',
+          imagem: '/images/fechalead.webp'
         }
       ]
     },
